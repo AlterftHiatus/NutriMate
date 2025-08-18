@@ -1,7 +1,8 @@
 <?php
+session_start();
 require_once "../functions/auth.php";
 if (!isAuthenticated()) {
-    header("Location: ../index.php");
+    header("Location: login.php");
     exit;
 }
 

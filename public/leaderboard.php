@@ -1,5 +1,4 @@
 <?php
-session_start();
 include '../config/db.php'; // koneksi database
 
 // var_dump($_SESSION['user_id']);
@@ -11,30 +10,18 @@ $result = $conn->query($sql);
 
 $current_user_id = $_SESSION['user_id'] ?? null;
 ?>
-
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Leaderboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        .highlight td {
-            background-color: #ffe08a !important;
-            /* warna kuning */
-            font-weight: bold !important;
-            color: #000 !important;
-            /* teks tetap terbaca */
-        }
-    </style>
-</head>
+<style>
+    .highlight td {
+        background-color: #ffe08a !important;
+        /* warna kuning */
+        font-weight: bold !important;
+        color: #000 !important;
+        /* teks tetap terbaca */
+    }
+</style>
 
 <body class="bg-light">
-
-    <a href="index.php" class="mb-4 d-inline-block">⬅ Kembali ke index</a>
-
-    <div class="container mt-5">
+    <div>
         <h2 class="text-center mb-4">🏆 Leaderboard Top 10</h2>
         <table class="table table-striped table-bordered text-center">
             <thead class="table-dark">

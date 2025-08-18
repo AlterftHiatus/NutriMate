@@ -1,12 +1,5 @@
 <?php
-session_start();
 include '../config/db.php'; // koneksi database
-
-// Cek login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
 
 $user_id = $_SESSION['user_id'];
 
@@ -40,20 +33,8 @@ $stmt2->execute();
 $result_activities = $stmt2->get_result();
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Profil Saya</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-
 <body class="bg-light">
-
     <div class="container mt-5">
-        <a href="index.php" class="mb-4 d-inline-block">⬅ Kembali ke index</a>
-
         <h2 class="text-center mb-4">👤 Profil Saya</h2>
 
         <div class="row">

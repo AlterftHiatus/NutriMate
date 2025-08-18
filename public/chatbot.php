@@ -1,5 +1,4 @@
 <?php
-session_start();
 require '../config/chatbotAPI.php';
 
 // Asumsikan user sudah login
@@ -65,7 +64,7 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         .chat-container {
             width: 500px;
-            margin: 40px auto;
+            margin: 10px auto;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, .1);
@@ -129,9 +128,6 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-
-    <a href="index.php" class="mb-4 d-inline-block">⬅ Kembali ke index</a>
-    
     <div class="chat-container">
         <div class="chat-box" id="chat-box">
             <?php foreach ($chats as $chat): ?>

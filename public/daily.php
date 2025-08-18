@@ -1,13 +1,4 @@
 <?php
-session_start();
-require '../config/db.php';
-
-// Cek login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
-
 $user_id = $_SESSION['user_id'];
 
 // Ambil data user
@@ -72,37 +63,25 @@ $stmtHistory->execute();
 $resultHistory = $stmtHistory->get_result();
 
 ?>
-<!DOCTYPE html>
-<html lang="id">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <title>Daily Progress</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
+    .streak-badge {
+        font-size: 1.2rem;
+        color: #ff5722;
+        font-weight: bold;
+    }
 
-        .streak-badge {
-            font-size: 1.2rem;
-            color: #ff5722;
-            font-weight: bold;
-        }
-
-        .exp-badge {
-            font-size: 1.2rem;
-            color: #2196f3;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
+    .exp-badge {
+        font-size: 1.2rem;
+        color: #2196f3;
+        font-weight: bold;
+    }
+</style>
 <body>
-
-    <a href="dashboard.php" class="mb-4 d-inline-block">⬅ Kembali ke dashboard</a>
-
     <div class="text-center mb-4">
         <h1>Hai, <?php echo $name; ?> 👋</h1>
         <p>Progress Harian Kamu</p>
