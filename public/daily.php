@@ -99,7 +99,7 @@ $resultHistory = $stmtHistory->get_result();
     </style>
 </head>
 
-<body class="container py-5">
+<body>
 
     <a href="dashboard.php" class="mb-4 d-inline-block">⬅ Kembali ke dashboard</a>
 
