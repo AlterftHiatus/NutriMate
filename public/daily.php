@@ -81,58 +81,116 @@ $resultHistory = $stmtHistory->get_result();
         font-weight: bold;
     }
 </style>
-<body>
-    <div class="text-center mb-4">
-        <h1>Hai, <?php echo $name; ?> 👋</h1>
-        <p>Progress Harian Kamu</p>
-    </div>
-
-    <div class="card p-4 shadow-sm mb-4">
-        <div class="mb-3">
-            <span class="exp-badge">EXP: <?php echo $exp; ?></span>
+<section  class="d-flex gap-5">
+    <div class="todo-container " style="width: 70%;" >
+        <!--TODO: HISTORY dan DIAGRAM BATANG -->
+        <div class="text-center mb-4">
+            <h1>Hai, <?php echo $name; ?> 👋</h1>
+            <p>Progress Harian Kamu</p>
         </div>
-        <div class="mb-3">
-            <span class="streak-badge">🔥 Streak: <?php echo $streak; ?> hari</span>
+
+        <div class="card p-4 shadow-sm mb-4">
+            <div class="mb-3">
+                <span class="exp-badge">EXP: <?php echo $exp; ?></span>
+            </div>
+            <div class="mb-3">
+                <span class="streak-badge">🔥 Streak: <?php echo $streak; ?> hari</span>
+            </div>
+            <a href="beraktivitas.php" class="btn btn-primary btn-lg w-100">Mulai Beraktivitas</a>
         </div>
-        <a href="beraktivitas.php" class="btn btn-primary btn-lg w-100">Mulai Beraktivitas</a>
-    </div>
 
-    <div class="card p-4 shadow-sm">
-        <h5 class="mb-3 text-center">📊 EXP 7 Hari Terakhir</h5>
-        <canvas id="expChart" height="120"></canvas>
-    </div>
+        <div class="card p-4 shadow-sm">
+            <h5 class="mb-3 text-center"><i class="bi bi-graph-up"></i> EXP 7 Hari Terakhir</h5>
+            <canvas id="expChart" height="120"></canvas>
+        </div>
 
-    <div class="card p-4 shadow-sm mt-4">
-    <h5 class="mb-3 text-center">📝 Riwayat Aktivitas (7 Hari Terakhir)</h5>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead class="table-light">
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Aktivitas</th>
-                    <th>Durasi (mnt)</th>
-                    <th>Kalori</th>
-                    <th>EXP</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($resultHistory->num_rows > 0): ?>
-                    <?php while ($row = $resultHistory->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo date('d M Y', strtotime($row['activity_date'])); ?></td>
-                            <td><?php echo htmlspecialchars($row['activity_name']); ?></td>
-                            <td><?php echo (int)$row['duration_minutes']; ?></td>
-                            <td><?php echo (int)$row['calories_burned']; ?></td>
-                            <td><?php echo (int)$row['exp_earned']; ?></td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr><td colspan="5" class="text-center">Belum ada aktivitas dalam 7 hari terakhir.</td></tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+        <div class="card p-4 shadow-sm mt-4">
+        <h5 class="mb-3 text-center"><i class="bi bi-card-checklist"></i> Riwayat Aktivitas (7 Hari Terakhir)</h5>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Aktivitas</th>
+                        <th>Durasi (mnt)</th>
+                        <th>Kalori</th>
+                        <th>EXP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($resultHistory->num_rows > 0): ?>
+                        <?php while ($row = $resultHistory->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo date('d M Y', strtotime($row['activity_date'])); ?></td>
+                                <td><?php echo htmlspecialchars($row['activity_name']); ?></td>
+                                <td><?php echo (int)$row['duration_minutes']; ?></td>
+                                <td><?php echo (int)$row['calories_burned']; ?></td>
+                                <td><?php echo (int)$row['exp_earned']; ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr><td colspan="5" class="text-center">Belum ada aktivitas dalam 7 hari terakhir.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div> 
+    <div class="sideSection" style="width: 30%;">
+
+        <!-- TITLE STREAK -->
+        <div class="titleStreak d-flex gap-3 align-items-center justify-content-around mb-5">
+
+            <!-- EXP -->
+            <div class="streak d-flex align-items-center">
+                <img src="../assets/images/dashboard/exp.png" alt="" width="40px" class="rounded-circle d-block">
+                <p class="mb-0  fw-bold fs-5"><?php echo $exp; ?></p>
+            </div>
+
+            <!-- STREAK -->
+            <div class="streak d-flex align-items-center">
+                <img src="../assets/images/dashboard/redFire.png" alt="" width="40px" class="rounded-circle d-block">
+                <p class="mb-0  fw-bold fs-5"><?php echo $streak; ?></p>
+            </div>
+
+            <!-- PROFILE -->
+            <div class="dropdown">
+                <a class="nav-link nav-link-lg nav-link-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img alt="image" src="../assets/images/avatar/man2.png" width="40px" class="rounded-circle mr-1">
+                </a>
+                <div class="dropdown-menu dropdown-menu-left">
+                    <a href="index.php?page=profil" class="dropdown-item has-icon ">Profile </a>
+                    <a href="../auth/logout.php" class="dropdown-item has-icon text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                    </a>
+                </div>
+                <div class="dropdown-menu dropdown-menu-left"></div>
+            </div>
+        </div>
+
+        <!-- BUTTON MULAI OLAHRAGA -->
+        <a href="../pages/maps.php" id="start-btn" class="btn btn-success p-3 mb-3 " style="width: 18rem;">Mulai untuk olahraga</a>
+
+        <div class="character" style="width: 18rem;">
+            <div class="card mb-3 pt-2 pb-2">
+                <p class="fw-bold mb-1 text-center">Ach. Dani Abil Abidi Zein</p>
+            <!-- Wadah ratio portrait -->
+            <div class="ratio" style="--bs-aspect-ratio: 133.33%;">
+            <img src="../assets/images/videos/womenNormal.gif" 
+                alt="Animasi GIF" 
+                class="w-100 h-100 object-fit-cover">
+            </div>
+
+            <div class="description align-items-center text-center mt-2">
+            <p class="mb-1">Tinggi Badan: 170 cm</p>
+            <p class="mb-1">Berat Badan: 90 kg</p>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>  
+</section>
+
 
 
     <script>
@@ -193,7 +251,3 @@ $resultHistory = $stmtHistory->get_result();
             }
         });
     </script>
-
-</body>
-
-</html>
