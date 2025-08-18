@@ -1,0 +1,839 @@
+function/auth.php:
+<?php
+require_once __DIR__ . '/../config/db.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+function registerUser($name, $email, $password) {
+    global $conn;
+
+    if (!$name || !$email || !$password) return "Harap isi semua field.";
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) return "Format email tidak valid.";
+
+    $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $check->bind_param("s", $email);
+    $check->execute();
+    $check->store_result();
+    if ($check->num_rows > 0) return "Email sudah terdaftar.";
+
+    $hashed = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $email, $hashed);
+    return $stmt->execute() ? true : "Gagal registrasi.";
+}
+
+function loginUser($email, $password) {
+    global $conn;
+
+    if (!$email || !$password) return "Harap isi semua field.";
+
+    $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['name'] = $row['name'];
+            return true;
+        }
+        return "Password salah.";
+    }
+    return "Email tidak ditemukan.";
+}
+
+function isAuthenticated() {
+    return isset($_SESSION['user_id']);
+}
+
+function logoutUser() {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+?>
+
+function/save_activity.php:
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+// Kode selanjutnya...
+
+require_once "auth.php";
+require_once "db.php";
+
+if (!isAuthenticated()) {
+    echo json_encode(["success" => false, "message" => "Unauthorized"]);
+    exit;
+}
+
+$data = json_decode(file_get_contents("php://input"), true);
+if (!$data) {
+    echo json_encode(["success" => false, "message" => "No data received"]);
+    exit;
+}
+
+// Get user ID from session
+$userId = $_SESSION['user_id'];
+
+// Map activity types to IDs (make sure these match your activities table)
+$activityMap = [
+    'walk' => 1,
+    'jog' => 2,
+    'bike' => 3
+];
+
+// Get and validate activity data
+$activityType = $data['activity'] ?? '';
+$activityId = $activityMap[$activityType] ?? 0;
+if ($activityId === 0) {
+    echo json_encode(["success" => false, "message" => "Invalid activity type"]);
+    exit;
+}
+
+// Get other data
+$durationSec = $data['duration'] ?? 0;
+$durationMinutes = ceil($durationSec / 60); // Convert seconds to minutes
+$calories = $data['calories'] ?? 0;
+$exp = $data['exp'] ?? 0;
+$today = date('Y-m-d');
+
+try {
+    $pdo->beginTransaction();
+
+    // 1. Save to user_activities table
+    $stmt = $pdo->prepare("
+        INSERT INTO user_activities 
+            (user_id, activity_id, duration_minutes, calories_burned, exp_earned, activity_date) 
+        VALUES 
+            (?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([$userId, $activityId, $durationMinutes, $calories, $exp, $today]);
+
+    // 2. Update user's EXP
+    $stmt = $pdo->prepare("UPDATE users SET exp = exp + ? WHERE id = ?");
+    $stmt->execute([$exp, $userId]);
+
+    // 3. Update streak
+    $stmt = $pdo->prepare("SELECT last_activity_date, streak FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user['last_activity_date']) {
+        // First activity
+        $newStreak = 1;
+    } else {
+        $diff = (new DateTime($today))->diff(new DateTime($user['last_activity_date']))->days;
+        if ($diff === 1) {
+            $newStreak = $user['streak'] + 1; // Continue streak
+        } elseif ($diff > 1) {
+            $newStreak = 1; // Reset streak
+        } else {
+            $newStreak = $user['streak']; // Same day, no change
+        }
+    }
+
+    $stmt = $pdo->prepare("UPDATE users SET streak = ?, last_activity_date = ? WHERE id = ?");
+    $stmt->execute([$newStreak, $today, $userId]);
+
+    $pdo->commit();
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Activity saved successfully",
+        "streak" => $newStreak,
+        "exp_earned" => $exp
+    ]);
+} catch (Exception $e) {
+    $pdo->rollBack();
+    echo json_encode([
+        "success" => false,
+        "message" => "Error saving activity: " . $e->getMessage()
+    ]);
+}
+
+public/beraktivitas.php:
+<?php
+require_once "../functions/auth.php";
+if (!isAuthenticated()) {
+    header("Location: login.php");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beraktivitas — Health Tracker</title>
+
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            margin: 0;
+            background: #f7f7f9;
+        }
+
+        header {
+            padding: 12px 16px;
+            background: #111;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            opacity: .9;
+        }
+
+        .wrap {
+            max-width: 960px;
+            margin: 16px auto;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+        }
+
+        .grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        @media (min-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1.1fr .9fr;
+            }
+        }
+
+        #map {
+            width: 100%;
+            height: 52vh;
+            border-radius: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select,
+        button {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+
+        button.danger {
+            background: #ef4444;
+            color: #fff;
+            border-color: #ef4444;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .stat {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat .label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .stat .value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        .summary {
+            margin-top: 12px;
+            padding: 12px;
+            background: #ecfeff;
+            border: 1px solid #a5f3fc;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .summary strong {
+            display: inline-block;
+            min-width: 90px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>Beraktivitas</div>
+        <nav><a href="index.php">← Kembali ke Dashboard</a></nav>
+    </header>
+
+    <div class="wrap grid grid-2">
+        <section class="card">
+            <div id="map"></div>
+            <p class="note">Tips: Untuk akurasi lebih baik, aktifkan GPS dan tunggu hingga lokasi “mengunci” sebelum menekan <b>Mulai</b>.</p>
+        </section>
+
+        <section class="card">
+            <div class="controls">
+                <label for="activity">Aktivitas</label>
+                <select id="activity">
+                    <option value="walk">Jalan</option>
+                    <option value="jog">Jogging</option>
+                    <option value="bike">Bersepeda</option>
+                </select>
+
+                <button id="btnStart" class="primary">Mulai</button>
+                <button id="btnStop" class="danger" disabled>Stop</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="label">Durasi</div>
+                    <div class="value" id="durasi">00:00:00</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Jarak</div>
+                    <div class="value"><span id="jarak">0.00</span> km</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Kecepatan</div>
+                    <div class="value"><span id="pace">0.0</span> km/jam</div>
+                </div>
+            </div>
+
+            <div class="summary" id="summary">
+                <h3>Ringkasan Sesi</h3>
+                <p><strong>Aktivitas:</strong> <span id="sumAct">-</span></p>
+                <p><strong>Durasi:</strong> <span id="sumDur">-</span></p>
+                <p><strong>Jarak:</strong> <span id="sumDist">-</span> km</p>
+                <p><strong>Kalori:</strong> <span id="sumCal">-</span> kcal</p>
+                <p><strong>EXP:</strong> <span id="sumExp">-</span></p>
+                <button id="btnFinish" class="primary">Selesai</button>
+
+            </div>
+
+            <!-- <p class="note">Step 1 : belum kirim data ke server. Setelah ini (Step 2) kita hitung kalori & EXP lalu kirim ke backend untuk update EXP & streak.</p> -->
+        </section>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+    <script>
+        // MET value per aktivitas (sumber: compendium of physical activities)
+        const MET_VALUES = {
+            walk: 3.5, // Jalan
+            jog: 7.0, // Jogging
+            bike: 6.8 // Bersepeda santai
+        };
+
+        // Berat badan default (kg) - idealnya diambil dari profil user di DB
+        const USER_WEIGHT_KG = 65;
+
+        // ====== State ======
+        let map, userMarker, pathLine, watchId = null;
+        let points = []; // [{lat, lng, t}]
+        let startedAt = null; // Date
+        let durationTimer = null; // setInterval id
+        let totalDistanceM = 0; // meters
+
+        // ====== UI refs ======
+        const btnStart = document.getElementById('btnStart');
+        const btnStop = document.getElementById('btnStop');
+        const elDurasi = document.getElementById('durasi');
+        const elJarak = document.getElementById('jarak');
+        const elPace = document.getElementById('pace');
+
+        const summaryBox = document.getElementById('summary');
+        const sumAct = document.getElementById('sumAct');
+        const sumDur = document.getElementById('sumDur');
+        const sumDist = document.getElementById('sumDist');
+        const sumCal = document.getElementById('sumCal');
+        const sumExp = document.getElementById('sumExp');
+
+        // ====== Init Map ======
+        function initMap() {
+            map = L.map('map');
+            const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            // Try get current position to center
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const {
+                            latitude,
+                            longitude
+                        } = pos.coords;
+                        map.setView([latitude, longitude], 16);
+                        userMarker = L.marker([latitude, longitude]).addTo(map);
+                        pathLine = L.polyline([], {
+                            weight: 4
+                        }).addTo(map);
+                    },
+                    (err) => {
+                        console.warn('Gagal ambil lokasi awal:', err.message);
+                        // Fallback: Jakarta
+                        map.setView([-6.200000, 106.816666], 13);
+                        pathLine = L.polyline([], {
+                            weight: 4
+                        }).addTo(map);
+                    }, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                alert('Browser kamu tidak mendukung Geolocation.');
+                // Fallback
+                map.setView([-6.200000, 106.816666], 13);
+                pathLine = L.polyline([], {
+                    weight: 4
+                }).addTo(map);
+            }
+        }
+
+        // ====== Utils ======
+        function formatHHMMSS(sec) {
+            const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+            const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(sec % 60).toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        // Haversine distance in meters
+        function haversine(lat1, lon1, lat2, lon2) {
+            const R = 6371000; // meters
+            const toRad = (deg) => deg * Math.PI / 180;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) ** 2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function updateStats() {
+            // Duration
+            const seconds = Math.max(0, Math.floor((Date.now() - startedAt.getTime()) / 1000));
+            elDurasi.textContent = formatHHMMSS(seconds);
+
+            // Distance (km)
+            const km = (totalDistanceM / 1000);
+            elJarak.textContent = km.toFixed(2);
+
+            // Speed (km/h)
+            let speed = 0;
+            if (seconds > 0) speed = (km) / (seconds / 3600);
+            elPace.textContent = speed.toFixed(1);
+        }
+
+        function startTimer() {
+            if (durationTimer) clearInterval(durationTimer);
+            durationTimer = setInterval(updateStats, 1000);
+        }
+
+        function stopTimer() {
+            if (durationTimer) clearInterval(durationTimer);
+            durationTimer = null;
+            updateStats();
+        }
+
+        // ====== Tracking ======
+        function startTracking() {
+            points = [];
+            totalDistanceM = 0;
+            startedAt = new Date();
+            startTimer();
+
+            if (!('geolocation' in navigator)) {
+                alert('Geolocation tidak tersedia di browser ini.');
+                return;
+            }
+
+            watchId = navigator.geolocation.watchPosition(
+                (pos) => {
+                    const {
+                        latitude,
+                        longitude,
+                        accuracy
+                    } = pos.coords;
+                    const t = Date.now();
+
+                    // Filter akurasi terlalu buruk (>50m) di awal
+                    if (accuracy && accuracy > 50 && points.length < 3) return;
+
+                    const latlng = [latitude, longitude];
+                    points.push({
+                        lat: latitude,
+                        lng: longitude,
+                        t
+                    });
+
+                    // Update marker & path
+                    if (userMarker) userMarker.setLatLng(latlng);
+                    else userMarker = L.marker(latlng).addTo(map);
+
+                    pathLine.addLatLng(latlng);
+                    map.panTo(latlng); // auto follow
+
+                    // Distance accumulate
+                    const Lp = points.length;
+                    if (Lp >= 2) {
+                        const a = points[Lp - 2];
+                        const b = points[Lp - 1];
+                        const d = haversine(a.lat, a.lng, b.lat, b.lng);
+                        // Buang “loncat” > 100m antar update (bias GPS)
+                        if (d > 0 && d < 100) {
+                            totalDistanceM += d;
+                        }
+                    }
+                },
+                (err) => {
+                    console.warn('watchPosition error:', err.message);
+                    alert('Gagal mengakses lokasi. Coba cek izin lokasi browser.');
+                    stopTracking();
+                }, {
+                    enableHighAccuracy: true,
+                    maximumAge: 0,
+                    timeout: 15000
+                }
+            );
+        }
+
+        function stopTracking() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+            stopTimer();
+            showSummary();
+        }
+
+        function showSummary() {
+            const seconds = startedAt ? Math.floor((Date.now() - startedAt.getTime()) / 1000) : 0;
+            const km = (totalDistanceM / 1000);
+            const actMap = {
+                walk: 'Jalan',
+                jog: 'Jogging',
+                bike: 'Bersepeda'
+            };
+
+            // Hitung kalori
+            const actKey = document.getElementById('activity').value;
+            const MET = MET_VALUES[actKey] || 1;
+            const hours = seconds / 3600;
+            const calories = MET * USER_WEIGHT_KG * hours;
+
+            // Hitung EXP (misal 1 km = 10 EXP)
+            const exp = km * 10;
+
+
+            sumAct.textContent = actMap[document.getElementById('activity').value] || '-';
+            sumDur.textContent = formatHHMMSS(seconds);
+            sumDist.textContent = km.toFixed(2);
+            sumCal.textContent = calories.toFixed(0);
+            sumExp.textContent = exp.toFixed(0);
+
+            summaryBox.style.display = 'block';
+        }
+
+        // ====== UI Events ======
+        btnStart.addEventListener('click', () => {
+            btnStart.disabled = true;
+            btnStop.disabled = false;
+            summaryBox.style.display = 'none';
+
+            // Reset meter
+            totalDistanceM = 0;
+            elJarak.textContent = '0.00';
+            elPace.textContent = '0.0';
+            elDurasi.textContent = '00:00:00';
+
+            // Reset visual path
+            if (pathLine) pathLine.remove();
+            pathLine = L.polyline([], {
+                weight: 4
+            }).addTo(map);
+
+            startTracking();
+        });
+
+        btnStop.addEventListener('click', () => {
+            btnStop.disabled = true;
+            btnStart.disabled = false;
+            stopTracking();
+        });
+
+        const btnFinish = document.getElementById('btnFinish');
+        btnFinish.addEventListener('click', () => {
+            const actKey = document.getElementById('activity').value;
+            const seconds = startedAt ? Math.floor((Date.now() - startedAt.getTime()) / 1000) : 0;
+            const km = (totalDistanceM / 1000);
+            const MET = MET_VALUES[actKey] || 1;
+            const hours = seconds / 3600;
+            const calories = MET * USER_WEIGHT_KG * hours;
+            const exp = km * 10;
+
+            fetch('../functions/save_activity.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        activity: actKey,
+                        duration: seconds,
+                        distance: km,
+                        calories: Math.round(calories),
+                        exp: Math.round(exp)
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Aktivitas tersimpan!');
+                        window.location.href = 'index.php'; // kembali ke dashboard
+                    } else {
+                        alert('Gagal menyimpan aktivitas: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Terjadi kesalahan saat menyimpan data.');
+                });
+        });
+
+
+        // Init
+        initMap();
+    </script>
+</body>
+
+</html>
+
+script database:
+-- Buat database
+CREATE DATABASE health_tracker;
+USE health_tracker;
+
+-- =========================
+-- 1. Tabel USERS
+-- =========================
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    height FLOAT DEFAULT NULL, -- tinggi badan (cm)
+    weight FLOAT DEFAULT NULL, -- berat badan (kg)
+    exp INT DEFAULT 0,
+    streak INT DEFAULT 0,
+    last_activity_date DATE DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =========================
+-- 2. Tabel ACTIVITIES
+-- =========================
+CREATE TABLE activities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL, -- contoh: Lari, Jogging, Bersepeda
+    calories_per_minute FLOAT NOT NULL, -- kalori terbakar per menit
+    exp_per_calorie FLOAT NOT NULL -- konversi kalori → exp
+);
+
+-- =========================
+-- 3. Tabel USER_ACTIVITIES
+-- =========================
+CREATE TABLE user_activities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    activity_id INT NOT NULL,
+    duration_minutes INT NOT NULL,
+    calories_burned FLOAT NOT NULL,
+    exp_earned INT NOT NULL,
+    activity_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (activity_id) REFERENCES activities(id) ON DELETE CASCADE
+);
+
+-- =========================
+-- 4. Tabel CHAT_HISTORY
+-- =========================
+CREATE TABLE chat_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    role ENUM('user', 'bot') NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =========================
+-- 5. Tabel LEADERBOARD (opsional)
+-- =========================
+CREATE TABLE leaderboard (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    exp INT NOT NULL,
+    rank_position INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+public/index.php:
+<?php
+require_once "../functions/auth.php";
+if (!isAuthenticated()) {
+    header("Location: login.php");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<h2>Selamat datang, <?php echo $_SESSION['name']; ?>!</h2>
+<ul>
+    <li><a href="daily.php">Daily</a></li>
+    <li><a href="chatbot.php">Chatbot</a></li>
+    <li><a href="leaderboard.php">Leaderboard</a></li>
+    <li><a href="profile.php">Profile</a></li>
+</ul>
+<p><a href="logout.php">Logout</a></p>
+</body>
+</html>
+
+public/login.php:
+<?php
+require_once "../functions/auth.php";
+if (!isAuthenticated()) {
+    header("Location: login.php");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<h2>Selamat datang, <?php echo $_SESSION['name']; ?>!</h2>
+<ul>
+    <li><a href="daily.php">Daily</a></li>
+    <li><a href="chatbot.php">Chatbot</a></li>
+    <li><a href="leaderboard.php">Leaderboard</a></li>
+    <li><a href="profile.php">Profile</a></li>
+</ul>
+<p><a href="logout.php">Logout</a></p>
+</body>
+</html>
+
+public/register.php:
+<?php
+require_once "../functions/auth.php";
+
+$message = "";
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $result = registerUser($_POST['name'], $_POST['email'], $_POST['password']);
+    if ($result === true) {
+        header("Location: login.php?registered=1");
+        exit;
+    } else {
+        $message = $result;
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+<h2>Register</h2>
+<?php if ($message) echo "<p style='color:red;'>$message</p>"; ?>
+<form method="post">
+    <input type="text" name="name" placeholder="Nama" required><br>
+    <input type="email" name="email" placeholder="Email" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <button type="submit">Daftar</button>
+</form>
+<p>Sudah punya akun? <a href="login.php">Login</a></p>
+</body>
+</html>
+
+public/logout.php:
+ <?php
+require_once "../functions/auth.php";
+logoutUser();
+
+config/db.php:
+<?php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "health_tracker";
+
+$conn = new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error) {
+    die("Koneksi gagal: " . $conn->connect_error);
+}
+
+?>
+

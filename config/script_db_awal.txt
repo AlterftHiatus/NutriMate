@@ -1,0 +1,69 @@
+-- Buat database
+CREATE DATABASE health_tracker;
+USE health_tracker;
+
+-- =========================
+-- 1. Tabel USERS
+-- =========================
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    height FLOAT DEFAULT NULL, -- tinggi badan (cm)
+    weight FLOAT DEFAULT NULL, -- berat badan (kg)
+    exp INT DEFAULT 0,
+    streak INT DEFAULT 0,
+    last_activity_date DATE DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =========================
+-- 2. Tabel ACTIVITIES
+-- =========================
+CREATE TABLE activities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL, -- contoh: Lari, Jogging, Bersepeda
+    calories_per_minute FLOAT NOT NULL, -- kalori terbakar per menit
+    exp_per_calorie FLOAT NOT NULL -- konversi kalori → exp
+);
+
+-- =========================
+-- 3. Tabel USER_ACTIVITIES
+-- =========================
+CREATE TABLE user_activities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    activity_id INT NOT NULL,
+    duration_minutes INT NOT NULL,
+    calories_burned FLOAT NOT NULL,
+    exp_earned INT NOT NULL,
+    activity_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (activity_id) REFERENCES activities(id) ON DELETE CASCADE
+);
+
+-- =========================
+-- 4. Tabel CHAT_HISTORY
+-- =========================
+CREATE TABLE chat_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    role ENUM('user', 'bot') NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =========================
+-- 5. Tabel leaderboard
+-- =========================
+CREATE TABLE leaderboard (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    exp INT NOT NULL,
+    rank_position INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
