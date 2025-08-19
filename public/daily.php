@@ -182,7 +182,7 @@ $resultHistory = $stmtHistory->get_result();
                 </a>
                 <div class="dropdown-menu dropdown-menu-left">
                     <a href="index.php?page=profil" class="dropdown-item has-icon ">Profile </a>
-                    <a href="../auth/logout.php" class="dropdown-item has-icon text-danger">
+                    <a href="logout.php" class="dropdown-item has-icon text-danger">
                     <i class="fas fa-sign-out-alt"></i> Keluar
                     </a>
                 </div>
