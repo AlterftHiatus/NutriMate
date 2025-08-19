@@ -1,7 +1,27 @@
 <?php
 $user_id = $_SESSION['user_id'];
 
-// Ambil data user
+// ===================================
+// TODO: Ambil data RANK
+// ===================================
+$sql_user = "
+    SELECT u.id, u.name, u.exp,
+           (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS rank
+    FROM users u
+    WHERE u.id = ?
+";
+$stmt = $conn->prepare($sql_user);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user_result = $stmt->get_result();
+if ($user_result->num_rows > 0) {
+    $extra_user = $user_result->fetch_assoc();
+}
+
+
+// ===================================
+//TODO: Ambil data user
+// ===================================
 $stmt = $conn->prepare("SELECT name, exp, height, weight, streak FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -12,14 +32,17 @@ if (!$user) {
     echo "User tidak ditemukan.";
     exit;
 }
-
 $name = htmlspecialchars($user['name']);
 $height = (int)$user['height'];
 $weight = (int)$user['weight'];
 $exp = (int)$user['exp'];
 $streak = (int)$user['streak'];
 
-// Ambil data EXP 7 hari terakhir
+
+
+// ===================================
+//TODO: Ambil data EXP 7 hari terakhir
+// ===================================
 $query = "
     SELECT activity_date, SUM(exp_earned) AS total_exp
     FROM user_activities
@@ -37,7 +60,10 @@ while ($row = $result2->fetch_assoc()) {
     $expData[$row['activity_date']] = (int)$row['total_exp'];
 }
 
-// Siapkan label dan data
+
+// ===================================
+//TODO: Siapkan label dan data
+// ===================================
 $labels = [];
 $expValues = [];
 $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -134,13 +160,18 @@ $resultHistory = $stmtHistory->get_result();
 
             <!-- EXP -->
             <div class="streak d-flex align-items-center">
-                <img src="../assets/images/dashboard/exp.png" alt="" width="40px" class="rounded-circle d-block">
+                <img src="../assets/images/dashboard/exp.png" alt="" width="40" class="rounded-circle d-block">
                 <p class="mb-0  fw-bold fs-5"><?php echo $exp; ?></p>
+            </div>
+
+            <div class="streak d-flex align-items-center">
+                <img src="../assets/images/dashboard/gold.png" alt="" width="40" class="rounded-circle d-block">
+                <p class="mb-0  fw-bold fs-5"><?php echo $extra_user['rank']; ?></p>
             </div>
             
             <!-- STREAK -->
             <div class="streak d-flex align-items-center">
-                <img src="../assets/images/dashboard/redFire.png" alt="" width="40px" class="rounded-circle d-block">
+                <img src="../assets/images/dashboard/redFire.png" alt="" width="40" class="rounded-circle d-block">
                 <p class="mb-0  fw-bold fs-5"><?php echo $streak; ?></p>
             </div>
 
@@ -155,7 +186,6 @@ $resultHistory = $stmtHistory->get_result();
                     <i class="fas fa-sign-out-alt"></i> Keluar
                     </a>
                 </div>
-                <div class="dropdown-menu dropdown-menu-left"></div>
             </div>
         </div>
 
