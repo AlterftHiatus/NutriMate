@@ -2,7 +2,7 @@
 $user_id = $_SESSION['user_id'];
 
 // Ambil data user
-$stmt = $conn->prepare("SELECT name, exp, streak FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT name, exp, height, weight, streak FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -14,6 +14,8 @@ if (!$user) {
 }
 
 $name = htmlspecialchars($user['name']);
+$height = (int)$user['height'];
+$weight = (int)$user['weight'];
 $exp = (int)$user['exp'];
 $streak = (int)$user['streak'];
 
@@ -90,7 +92,7 @@ $resultHistory = $stmtHistory->get_result();
         <!--TODO: HISTORY dan DIAGRAM BATANG -->
         <div class="card p-4 shadow-sm">
             <h5 class="mb-3 text-center"><i class="bi bi-graph-up"></i> EXP 7 Hari Terakhir</h5>
-            <canvas id="expChart" height="120"></canvas>
+            <canvas id="expChart" height="270"></canvas>
         </div>
 
         <div class="card p-4 shadow-sm mt-4">
@@ -158,11 +160,11 @@ $resultHistory = $stmtHistory->get_result();
         </div>
 
         <!-- BUTTON MULAI OLAHRAGA -->
-        <a href="beraktivitas.php" id="start-btn" class="btn btn-success p-3 mb-3 " style="width: 18rem;">Mulai untuk olahraga <i class="bi bi-play-fill"></i></a>
+        <a href="beraktivitas.php" id="start-btn" class="btn btn-info p-3 mb-3 text-white" style="width: 18rem;">Mulai untuk olahraga <i class="bi bi-play-fill"></i></a>
 
         <div class="character" style="width: 18rem;">
             <div class="card mb-3 pt-2 pb-2">
-                <p class="fw-bold mb-1 text-center">Ach. Dani Abil Abidi Zein</p>
+                <p class="fw-bold mb-1 text-center"><?php echo $user['name']; ?></p>
             <!-- Wadah ratio portrait -->
             <div class="ratio" style="--bs-aspect-ratio: 133.33%;">
             <img src="../assets/images/videos/womenNormal.gif" 
@@ -171,8 +173,8 @@ $resultHistory = $stmtHistory->get_result();
             </div>
 
             <div class="description align-items-center text-center mt-2">
-            <p class="mb-1">Tinggi Badan: 170 cm</p>
-            <p class="mb-1">Berat Badan: 90 kg</p>
+            <p class="mb-1">Tinggi Badan: <?php echo $user['height']; ?> cm</p>
+            <p class="mb-1">Berat Badan: <?php echo $user['weight']; ?> kg</p>
             </div>
         </div>
         </div>
