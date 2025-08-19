@@ -69,9 +69,9 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .avatar {
             width: 35px;
             height: 35px;
-            border-radius: 50%;  /* bulat */
+            /* border-radius: 50%;  bulat */
             object-fit: cover;
-            border: 2px solid #ddd;
+            /* border: 2px solid #ddd; */
         }
 
         /* bubble chat */
@@ -89,7 +89,7 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
             justify-content: flex-end;
         }
         .chat-row.user .message {
-            background: #e250b2ff;
+            background: #ee41b4ff;
             color: #fff;
             border-bottom-right-radius: 4px;
         }
