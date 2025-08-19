@@ -83,22 +83,11 @@ $resultHistory = $stmtHistory->get_result();
 </style>
 <section  class="d-flex gap-5">
     <div class="todo-container " style="width: 70%;" >
+        <div class="mb-4">
+            <h2 class="fw-bold">📊 Dashboard Aktivitas</h2>
+            <p class="text-muted mb-0">Pantau perkembangan olahraga & progresmu di sini</p>
+        </div>
         <!--TODO: HISTORY dan DIAGRAM BATANG -->
-        <div class="text-center mb-4">
-            <h1>Hai, <?php echo $name; ?> 👋</h1>
-            <p>Progress Harian Kamu</p>
-        </div>
-
-        <div class="card p-4 shadow-sm mb-4">
-            <div class="mb-3">
-                <span class="exp-badge">EXP: <?php echo $exp; ?></span>
-            </div>
-            <div class="mb-3">
-                <span class="streak-badge">🔥 Streak: <?php echo $streak; ?> hari</span>
-            </div>
-            <a href="beraktivitas.php" class="btn btn-primary btn-lg w-100">Mulai Beraktivitas</a>
-        </div>
-
         <div class="card p-4 shadow-sm">
             <h5 class="mb-3 text-center"><i class="bi bi-graph-up"></i> EXP 7 Hari Terakhir</h5>
             <canvas id="expChart" height="120"></canvas>
@@ -139,14 +128,14 @@ $resultHistory = $stmtHistory->get_result();
     <div class="sideSection" style="width: 30%;">
 
         <!-- TITLE STREAK -->
-        <div class="titleStreak d-flex gap-3 align-items-center justify-content-around mb-5">
+        <div class="titleStreak d-flex gap-2 align-items-center justify-content-around mb-4">
 
             <!-- EXP -->
             <div class="streak d-flex align-items-center">
                 <img src="../assets/images/dashboard/exp.png" alt="" width="40px" class="rounded-circle d-block">
                 <p class="mb-0  fw-bold fs-5"><?php echo $exp; ?></p>
             </div>
-
+            
             <!-- STREAK -->
             <div class="streak d-flex align-items-center">
                 <img src="../assets/images/dashboard/redFire.png" alt="" width="40px" class="rounded-circle d-block">
@@ -169,7 +158,7 @@ $resultHistory = $stmtHistory->get_result();
         </div>
 
         <!-- BUTTON MULAI OLAHRAGA -->
-        <a href="../pages/maps.php" id="start-btn" class="btn btn-success p-3 mb-3 " style="width: 18rem;">Mulai untuk olahraga</a>
+        <a href="beraktivitas.php" id="start-btn" class="btn btn-success p-3 mb-3 " style="width: 18rem;">Mulai untuk olahraga <i class="bi bi-play-fill"></i></a>
 
         <div class="character" style="width: 18rem;">
             <div class="card mb-3 pt-2 pb-2">

@@ -67,12 +67,14 @@ try {
     if ($user) {
         $today = date('Y-m-d');
         $yesterday = date('Y-m-d', strtotime('-1 day'));
-        $newStreak = 1; // default
+        $newStreak = 0; // default
 
         if ($user['last_activity_date'] === $yesterday) {
             $newStreak = $user['streak'] + 1; // teruskan streak
         } elseif ($user['last_activity_date'] === $today) {
             $newStreak = $user['streak']; // sudah aktivitas hari ini
+        }else{
+            $newStreak = 0;
         }
 
         $newExp = $user['exp'] + (int)$data['exp'];
