@@ -68,7 +68,7 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .chat-box {
-            height: 400px;
+            height: 550px;
             overflow-y: auto;
             padding: 15px;
             border-bottom: 1px solid #ddd;
