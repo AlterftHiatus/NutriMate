@@ -2,24 +2,6 @@
 $user_id = $_SESSION['user_id'];
 
 // ===================================
-// TODO: Ambil data RANK
-// ===================================
-$sql_user = "
-    SELECT u.id, u.name, u.exp,
-           (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS rank
-    FROM users u
-    WHERE u.id = ?
-";
-$stmt = $conn->prepare($sql_user);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$user_result = $stmt->get_result();
-if ($user_result->num_rows > 0) {
-    $extra_user = $user_result->fetch_assoc();
-}
-
-
-// ===================================
 //TODO: Ambil data user
 // ===================================
 $stmt = $conn->prepare("SELECT name, exp, height, weight, streak FROM users WHERE id = ?");
@@ -164,10 +146,6 @@ $resultHistory = $stmtHistory->get_result();
                 <p class="mb-0  fw-bold fs-5"><?php echo $exp; ?></p>
             </div>
 
-            <div class="streak d-flex align-items-center">
-                <img src="../assets/images/dashboard/gold.png" alt="" width="40" class="rounded-circle d-block">
-                <p class="mb-0  fw-bold fs-5"><?php echo $extra_user['rank']; ?></p>
-            </div>
             
             <!-- STREAK -->
             <div class="streak d-flex align-items-center">

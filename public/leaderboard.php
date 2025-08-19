@@ -167,12 +167,6 @@ if (!$found_current_user && $current_user_id) {
                 <p class="mb-0 fw-bold fs-5"><?= $exp ?></p>
             </div>
 
-            <!-- Rank -->
-            <div class="streak d-flex align-items-center">
-                <img src="../assets/images/dashboard/gold.png" alt="" width="40" class="rounded-circle d-block">
-                <p class="mb-0 fw-bold fs-5"><?= $user_rank ?></p>
-            </div>
-            
             <!-- STREAK -->
             <div class="streak d-flex align-items-center">
                 <img src="../assets/images/dashboard/redFire.png" alt="" width="40" class="rounded-circle d-block">
