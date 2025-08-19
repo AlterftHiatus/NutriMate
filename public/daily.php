@@ -6,11 +6,10 @@ $user_id = $_SESSION['user_id'];
 // ===================================
 $sql_user = "
     SELECT u.id, u.name, u.exp,
-    (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS user_rank
+           (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS rank
     FROM users u
     WHERE u.id = ?
 ";
-
 $stmt = $conn->prepare($sql_user);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -167,7 +166,7 @@ $resultHistory = $stmtHistory->get_result();
 
             <div class="streak d-flex align-items-center">
                 <img src="../assets/images/dashboard/gold.png" alt="" width="40" class="rounded-circle d-block">
-                <p class="mb-0  fw-bold fs-5"><?php echo $extra_user['user_rank']; ?></p>
+                <p class="mb-0  fw-bold fs-5"><?php echo $extra_user['rank']; ?></p>
             </div>
             
             <!-- STREAK -->
