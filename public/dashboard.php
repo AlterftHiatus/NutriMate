@@ -27,11 +27,11 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 <body>
   
 <!-- Loader -->
-<div id="loader-wrapper">
+<!-- <div id="loader-wrapper">
   <div class="spinner-border text-warning" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
-</div>
+</div> -->
 
 <div class="d-flex h-100 w-100">
   <!-- SIDEBAR -->
@@ -153,15 +153,14 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 </script>
 <?php endif; ?>
 
-
 <script>
 
   //? INI ADALAH LOADER
 
-  window.addEventListener("load", function () {
-    const loader = document.getElementById("loader-wrapper");
-    loader.style.display = "none";
-  });
+  // window.addEventListener("load", function () {
+  //   const loader = document.getElementById("loader-wrapper");
+  //   loader.style.display = "none";
+  // });
 </script>
 
 </body>
