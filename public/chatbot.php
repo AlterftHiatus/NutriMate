@@ -58,25 +58,6 @@ $stmt->execute([$user_id]);
 $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
     <style>
-
-        .chat-container{
-            height: 100vh;
-            margin: 10px auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-        }
-
-        .chat-box {
-            height: 550px;
-            overflow-y: auto;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
         /* baris chat */
         .chat-row {
             display: flex;
@@ -108,7 +89,7 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
             justify-content: flex-end;
         }
         .chat-row.user .message {
-            background: #007bff;
+            background: #e250b2ff;
             color: #fff;
             border-bottom-right-radius: 4px;
         }
@@ -121,58 +102,99 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
             justify-content: flex-start;
         }
         .chat-row.bot .message {
-            background: #f7f7f7;
+            background: yellow;
             color: #333;
             border-bottom-left-radius: 4px;
         }
 
-        form {
-            display: flex;
-            padding: 10px;
-        }
 
-        input[type=text] {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            outline: none;
-        }
+.chat-container {
+    height: 100vh;
+    width: 70%;
+    margin: 8px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    display: flex;
+    flex-direction: column; /* penting biar form bisa nempel bawah */
+}
 
-        button {
-            padding: 10px 20px;
-            border: none;
-            background: #007bff;
-            color: #fff;
-            border-radius: 20px;
-            margin-left: 8px;
-            cursor: pointer;
-        }
+/* biar chat-box fleksibel ngisi sisa ruang */
+.chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto; /* Hapus fixed height 500px */
+}
 
-        button:hover {
-            background: #0056b3;
-        }
+/* form di bawah */
+form {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 0;
+    border-top: 1px solid #ddd;
+    background: #fff;
+}
+
+
+/* input */
+form input[type=text] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+/* tombol */
+form button {
+    border: none;
+    background: none;
+    margin-left: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #007bff;
+}
+form button:hover {
+    color: #0056b3;
+}
     </style>
-    <div class="chat-container">
-        <div class="chat-box" id="chat-box">
-            <?php foreach ($chats as $chat): ?>
-                <div class="chat-row <?= $chat['role'] ?>">
-                    <?php if ($chat['role'] === 'bot'): ?>
-                        <img src="<?= $botAvatar ?>" alt="Bot" class="avatar">
-                    <?php else: ?>
-                        <img src="../assets/images/avatar/<?= htmlspecialchars($userAvatar) ?>" alt="User" class="avatar">
-                    <?php endif; ?>
-
-                    <div class="message <?= $chat['role'] === 'user' ? 'user' : 'bot' ?>">
-                        <?= nl2br(htmlspecialchars($chat['message'])) ?>
+    <div class="sectionContainer d-flex gap-1">
+        <div class="chat-container">
+            <div class="chat-box" id="chat-box">
+                <?php foreach ($chats as $chat): ?>
+                    <div class="chat-row <?= $chat['role'] ?>">
+                        <?php if ($chat['role'] === 'bot'): ?>
+                            <img src="<?= $botAvatar ?>" alt="Bot" class="avatar">
+                        <?php else: ?>
+                            <img src="../assets/images/avatar/<?= htmlspecialchars($userAvatar) ?>" alt="User" class="avatar">
+                        <?php endif; ?>
+    
+                        <div class="message <?= $chat['role'] === 'user' ? 'user' : 'bot' ?>">
+                            <?= nl2br(htmlspecialchars($chat['message'])) ?>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+            <form method="post" autocomplete="off" class="input-group"> 
+                <button type="submit" class="input-group-text"><i class="bi bi-plus-circle fw-bold fs-5"></i></button>
+                <input type="text" name="message" placeholder="Ketik pertanyaan seputar kesehatan..." required>
+            </form>
         </div>
-        <form method="post" autocomplete="off">
-            <input type="text" name="message" placeholder="Ketik pertanyaan seputar kesehatan..." required>
-            <button type="submit">Kirim</button>
-        </form>
+        <div class="card mt-2">
+            <h4>suggestion question</h4>
+              <div class="card-body">
+                This is some text within a card body.
+            </div>
+        </div>
     </div>
 
     <script>
