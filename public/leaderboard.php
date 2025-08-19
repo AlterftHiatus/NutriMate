@@ -14,8 +14,8 @@ if (!$current_user_id) {
 // ===================================
 $sql_user = "
     SELECT u.id, u.name, u.exp,
-           (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS rank,
-           u.height, u.weight, u.streak
+        (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS user_rank,
+        u.height, u.weight, u.streak
     FROM users u
     WHERE u.id = ?
 ";
@@ -36,7 +36,7 @@ $height = isset($user['height']) ? (int)$user['height'] : 0;
 $weight = isset($user['weight']) ? (int)$user['weight'] : 0;
 $exp = isset($user['exp']) ? (int)$user['exp'] : 0;
 $streak = isset($user['streak']) ? (int)$user['streak'] : 0;
-$user_rank = isset($user['rank']) ? (int)$user['rank'] : 0;
+$user_rank = isset($user['user_rank']) ? (int)$user['user_rank'] : 0;
 
 // ===================================
 // Ambil top 10 user berdasarkan EXP
@@ -48,8 +48,8 @@ $top_users = [];
 $found_current_user = false;
 
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        if($row['id'] == $current_user_id) {
+    while ($row = $result->fetch_assoc()) {
+        if ($row['id'] == $current_user_id) {
             $found_current_user = true;
         }
         $top_users[] = $row;
@@ -77,40 +77,45 @@ if (!$found_current_user && $current_user_id) {
 }
 ?>
 <style>
-.highlight {
-    background-color: #fff3cd !important; /* kuning soft */
-    border-left: 4px solid #ffc107;
-}
-.scoreboard-card {
-    background-color: #2a2a40;
-    border-radius: 1rem;
-    color: white;
-    width: 320px;
-}
-.avatar {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    border: 2px solid #4dabf7;
-    object-fit: cover;
-}
-.status-dot {
-    position: absolute;
-    bottom: 4px;
-    right: 4px;
-    width: 12px;
-    height: 12px;
-    background-color: #4ade80;
-    border: 2px solid #2a2a40;
-    border-radius: 50%;
-}
-.icon-box {
-    background-color: #3a3a55;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 20px;
-}
+    .highlight {
+        background-color: #fff3cd !important;
+        /* kuning soft */
+        border-left: 4px solid #ffc107;
+    }
+
+    .scoreboard-card {
+        background-color: #2a2a40;
+        border-radius: 1rem;
+        color: white;
+        width: 320px;
+    }
+
+    .avatar {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        border: 2px solid #4dabf7;
+        object-fit: cover;
+    }
+
+    .status-dot {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 12px;
+        height: 12px;
+        background-color: #4ade80;
+        border: 2px solid #2a2a40;
+        border-radius: 50%;
+    }
+
+    .icon-box {
+        background-color: #3a3a55;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 20px;
+    }
 </style>
 
 <div class="classContainer d-flex gap-4">
@@ -123,38 +128,38 @@ if (!$found_current_user && $current_user_id) {
         </div>
         <div class="list-group">
             <?php if (!empty($top_users) || $extra_user): ?>
-            <?php $rank = 1; ?>
-            <?php foreach($top_users as $row): ?>
-                <?php $highlight = ($row['id'] == $current_user_id) ? "highlight" : ""; ?>
-                <div class="list-group-item d-flex justify-content-between align-items-center <?= $highlight ?>">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <?php if ($rank == 1): ?>
-                        <img src="../assets/images/dashboard/juara1.png" alt="1" width="30" height="30" class="me-2">
-                        <?php elseif ($rank == 2): ?>
-                        <img src="../assets/images/dashboard/juara2.png" alt="2" width="30" height="30" class="me-2">
-                        <?php elseif ($rank == 3): ?>
-                        <img src="../assets/images/dashboard/juara3.png" alt="3" width="30" height="30" class="me-2">
-                        <?php else: ?>
-                        <span class="badge bg-secondary me-2"><?= $rank ?></span>
-                        <?php endif; ?>
+                <?php $rank = 1; ?>
+                <?php foreach ($top_users as $row): ?>
+                    <?php $highlight = ($row['id'] == $current_user_id) ? "highlight" : ""; ?>
+                    <div class="list-group-item d-flex justify-content-between align-items-center <?= $highlight ?>">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <?php if ($rank == 1): ?>
+                                <img src="../assets/images/dashboard/juara1.png" alt="1" width="30" height="30" class="me-2">
+                            <?php elseif ($rank == 2): ?>
+                                <img src="../assets/images/dashboard/juara2.png" alt="2" width="30" height="30" class="me-2">
+                            <?php elseif ($rank == 3): ?>
+                                <img src="../assets/images/dashboard/juara3.png" alt="3" width="30" height="30" class="me-2">
+                            <?php else: ?>
+                                <span class="badge bg-secondary me-2"><?= $rank ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <span class="fw-medium flex-grow-1 text-center"><?= htmlspecialchars($row['name']) ?></span>
+                        <span class="fw-bold"><?= $row['exp'] ?> XP</span>
                     </div>
-                    <span class="fw-medium flex-grow-1 text-center"><?= htmlspecialchars($row['name']) ?></span>
-                    <span class="fw-bold"><?= $row['exp'] ?> XP</span>
-                </div>
-                <?php $rank++; ?>
-            <?php endforeach; ?>
+                    <?php $rank++; ?>
+                <?php endforeach; ?>
 
-            <?php if ($extra_user): ?>
-                <div class="list-group-item d-flex justify-content-between align-items-center highlight">
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-secondary me-2"><?= $extra_user_rank ?? '-' ?></span>
-                        <span class="fw-medium"><?= htmlspecialchars($extra_user['name']) ?></span>
+                <?php if ($extra_user): ?>
+                    <div class="list-group-item d-flex justify-content-between align-items-center highlight">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary me-2"><?= $extra_user_rank ?? '-' ?></span>
+                            <span class="fw-medium"><?= htmlspecialchars($extra_user['name']) ?></span>
+                        </div>
+                        <span class="fw-bold"><?= $extra_user['exp'] ?> XP</span>
                     </div>
-                    <span class="fw-bold"><?= $extra_user['exp'] ?> XP</span>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
             <?php else: ?>
-            <p class="text-center">Belum ada peserta.</p>
+                <p class="text-center">Belum ada peserta.</p>
             <?php endif; ?>
         </div>
     </div>
@@ -172,7 +177,7 @@ if (!$found_current_user && $current_user_id) {
                 <img src="../assets/images/dashboard/gold.png" alt="" width="40" class="rounded-circle d-block">
                 <p class="mb-0 fw-bold fs-5"><?= $user_rank ?></p>
             </div>
-            
+
             <!-- STREAK -->
             <div class="streak d-flex align-items-center">
                 <img src="../assets/images/dashboard/redFire.png" alt="" width="40" class="rounded-circle d-block">
