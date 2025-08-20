@@ -2,12 +2,17 @@
 require_once __DIR__ . '/../config/db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-function registerUser($name, $email, $password) {
+function registerUser($name, $email, $password, $height, $weight) {
     global $conn;
 
-    if (!$name || !$email || !$password) return "Harap isi semua field.";
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) return "Format email tidak valid.";
+    if (!$name || !$email || !$password || !$height || !$weight) {
+        return "Harap isi semua field.";
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "Format email tidak valid.";
+    }
 
+    // Cek apakah email sudah ada
     $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $check->bind_param("s", $email);
     $check->execute();
@@ -15,10 +20,14 @@ function registerUser($name, $email, $password) {
     if ($check->num_rows > 0) return "Email sudah terdaftar.";
 
     $hashed = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $name, $email, $hashed);
+
+    // Sesuaikan query INSERT dengan kolom di tabel users
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, height, weight) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssii", $name, $email, $hashed, $height, $weight);
+
     return $stmt->execute() ? true : "Gagal registrasi.";
 }
+
 
 function loginUser($email, $password) {
     global $conn;

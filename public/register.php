@@ -3,7 +3,13 @@ require_once "../functions/auth.php";
 
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $result = registerUser($_POST['name'], $_POST['email'], $_POST['password']);
+    $result = registerUser(
+        $_POST['name'],
+        $_POST['email'],
+        $_POST['password'],
+        $_POST['height'],
+        $_POST['weight']
+    );
     if ($result === true) {
         header("Location: login.php?registered=1");
         exit;
@@ -24,6 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="text" name="name" placeholder="Nama" required><br>
     <input type="email" name="email" placeholder="Email" required><br>
     <input type="password" name="password" placeholder="Password" required><br>
+    <input type="number" name="height" placeholder="Tinggi Badan (cm)" min="50" max="250" required><br>
+    <input type="number" name="weight" placeholder="Berat Badan (kg)" min="20" max="300" required><br>
     <button type="submit">Daftar</button>
 </form>
 <p>Sudah punya akun? <a href="login.php">Login</a></p>
