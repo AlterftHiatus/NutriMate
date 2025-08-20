@@ -35,12 +35,19 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 
 <div class="d-flex h-100 w-100">
   <!-- SIDEBAR -->
-  <div class="sidebar-menu position-fixed h-100 " style="background-color: #3498DB;">
+ <div id="sidebar" class="sidebar-menu position-fixed h-100" style="background-color: #3498DB;">
     <div class="title d-flex justify-content-center align-items-center m-3 pe-3 border-bottom pb-3">
       <img src="../assets/images/avatar/Blue_and_White_3D_Avatar_Profession_Group_Project_Presentation__21_x_35_cm_-removebg-preview.png" alt="" width="60px">
-      <h4 class="text-white text-center fw-bold"><span style="color: yellow;">N</span>utri<span style="color: rgb(235, 41, 102);">m</span>ate</h4>
+      <h4 class="text-white text-center fw-bold ms-2">
+        <span style="color: yellow;">N</span>utri<span style="color: rgb(235, 41, 102);">m</span>ate
+      </h4>
     </div>
-    <ul class="list-unstyled m-2 ">
+    <!-- tombol toggle -->
+    <div class="text-center mb-3">
+      <button id="toggleSidebar" class="btn btn-sm btn-warning">☰</button>
+    </div>
+
+    <ul class="list-unstyled m-2">
       <li class="<?= $page === 'daily' ? 'active' : '' ?> pt-2 pb-2">
         <img src="../assets/images/dashboard/daily.png" alt="" width="40px">
         <a href="?page=daily" class="w-100">daily</a>
@@ -64,8 +71,9 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
     </ul>
   </div>
 
+
   <!-- KONTEN UTAMA -->
-  <div class="content">
+  <div id="mainContent" class="content">
     <?php
       switch ($page) {
         case 'daily':
@@ -103,7 +111,12 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 <!-- Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-
+<script>
+document.getElementById("toggleSidebar").addEventListener("click", function() {
+  document.getElementById("sidebar").classList.toggle("sidebar-collapsed");
+  document.getElementById("mainContent").classList.toggle("expanded");
+});
+</script>
 
 <!-- ALERT -->
 <?php if (isset($_GET['success'])): ?>

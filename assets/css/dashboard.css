@@ -8,118 +8,44 @@
 
 .sidebar-menu {
   width: 250px;
-  transition: 0.3s ease-in-out;
-  -webkit-transition: 0.3s ease-in-out;
-  -moz-transition: 0.3s ease-in-out;
-  -ms-transition: 0.3s ease-in-out;
-  -o-transition: 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out;
+  overflow: hidden;
 }
+
+.sidebar-collapsed {
+  width: 70px; /* sidebar mengecil */
+}
+
+.sidebar-collapsed ul li a {
+  display: none; /* sembunyikan teks link */
+}
+
+.sidebar-collapsed .title h4 {
+  display: none; /* sembunyikan judul */
+}
+
+.sidebar-collapsed .title img {
+  margin: auto;
+}
+
 .content {
   margin-left: 250px;
   padding: 20px;
-  flex-grow: 1;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
+  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+  width: calc(100% - 250px); /* otomatis menyesuaikan */
 }
 
+.content.expanded {
+  margin-left: 70px;
+  width: calc(100% - 70px); /* tetap full sisa layar */
+}
+
+/* Biar icon tetap rapi */
 ul li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
-  font-size: 16px;
-  padding: 0px 10px;
-  margin: 10px 20px;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  transition: border 0.2s ease, background-color 0.2s ease;
+  justify-content: flex-start;
 }
-ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-}
-ul li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-}
-ul li.active {
-  color: yellow;
-  border: 2px solid yellow;
-  background-color: rgba(163, 182, 56, 0.2);
-}
-ul li.active a {
-  color: yellow;
-}
-.section {
-  display: none;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-/*TODO: CSS KALENDER */
-/* mewarnai header (hari) di kalender */
-#calendar {
-  max-width: 900px;
-  margin: 0 auto;
-  background: white;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  min-height: 600px;
-}
-.fc-col-header-cell-cushion {
-  color: black;
-  font-weight: 600;
-  font-size: 16px;
-  text-decoration: none;
-}
-
-.fc-daygrid-day-number {
-  color: black;
-  text-decoration: none;
-}
-.fc-daygrid-day {
-  border: 2px solid rgb(165, 2, 56) !important;
-  /* biru */
-}
-
-.fc-daygrid-day {
-  border: 2px solid rgb(165, 2, 56) !important;
-  /* biru */
-}
-
-.fc-scrollgrid {
-  border: 2px solid rgb(165, 2, 56) !important; /* hitam di sekeliling seluruh grid kalender */
-}
-
-.section.active {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/*TODO: CSS DAILY */
-.fade-content {
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out;
-}
-.fade-content.show {
-  opacity: 1;
-}
-
-/* PAGES AKTIVITY  */
-.card-img-container {
-  height: 360px; /* atur tinggi gambar sesuai kebutuhan */
-  overflow: hidden;
-}
-.card-img-container img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
+.sidebar-collapsed ul li {
+  justify-content: center;
 }
 
 /*TODO : CSS LOADING  */
