@@ -161,7 +161,7 @@ if (!$found_current_user && $current_user_id) {
             <div class="list-group-item d-flex justify-content-between align-items-center py-3 mb-2 shadow-sm rounded-3 bg-gradient" style="background: linear-gradient(135deg, #f6d365, #fda085);">
                 <div class="d-flex align-items-center position-relative flex-grow-1">
                     <!-- Rank Badge -->
-                    <span class="badge bg-warning me-3 fs-6"><?= $extra_user_rank ?? '-' ?></span>
+                    <span class="badge bg-warning me-3 fs-6"><?= $rank ?? '-' ?></span>
                     
                     <!-- User Name di tengah -->
                     <span class="fw-bold fs-5 position-absolute start-50 translate-middle-x text-dark text-center">
