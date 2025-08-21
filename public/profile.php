@@ -3,7 +3,7 @@ include '../config/db.php'; // koneksi database
 
 $user_id = $_SESSION['user_id'];
 
-// Ambil data user
+// Ambil user user
 $sql_user = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql_user);
 $stmt->bind_param("i", $user_id);
@@ -11,7 +11,10 @@ $stmt->execute();
 $result_user = $stmt->get_result();
 $user = $result_user->fetch_assoc();
 
-// Hitung BMI jika data ada
+$avatar_user = htmlspecialchars($user['avatar']);
+$bmi_user = $user['bmi'];
+
+// Hitung BMI jika user ada
 $bmi = null;
 if (!empty($user['height']) && !empty($user['weight'])) {
     $height_m = $user['height'] / 100; // cm → m
@@ -34,11 +37,64 @@ $result_activities = $stmt2->get_result();
 ?>
 
 <body class="bg-light">
-    <div class="container mt-5">
+    <div class="card shadow-sm mb-4 bg-info">
+    <div class="card-body text-center">
+        <div class="position-relative d-inline-block mb-3">
+            <img src="../assets/images/avatar/<?= $user['avatar'] ?>.png" class=" border rounded-circle border-info" alt="Profile Picture" width="100px">
+            <button class="btn btn-sm btn-info position-absolute bottom-0 end-0 rounded-circle shadow">
+            <i class="bi bi-pencil-fill text-white" id="edit-foto"></i> 
+            </button>           
+        </div>
+        <p class="card-text fs-5">Halo, <strong><?= htmlspecialchars($user['name']) ?></strong></p>
+        <p class="card-text text-muted fst-italic" style="font-size: 14px;">Terdaftar sejak: <strong><?= date("d M Y", strtotime($user['created_at'])) ?></strong></p>
+        <a href="#" class="btn btn-primary btn-sm rounded-pill px-4">Go somewhere</a>
+    </div>
+    </div>
+ <div class="d-flex flex-row gap-3">
+
+        <!-- Character GIF -->
+        <div class="character flex-shrink-0" style="width: 30%; min-width: 200px;">
+            <div class="card mb-3">
+                <div class="ratio" style="--bs-aspect-ratio: 133.33%;">
+                    <img src="../assets/images/videos/<?= $avatar_user.$bmi_user ?>.gif" 
+                         alt="Animasi GIF" 
+                         class="w-100 h-100 object-fit-cover">
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Diri -->
+        <div class="datadiri flex-grow-1">
+            <h5 class="fw-bold mb-3 text-info"><i class="bi bi-person-lines-fill"></i> Data Diri</h5>
+            <form action="process/simpan_profile.php" method="post">
+                <div class="p-3">
+                    <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
+                    <div class="mb-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($user['email']) ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label for="nama" class="form-label">Nama Lengkap</label>
+                        <input type="text" name="nama" class="form-control" id="nama" value="<?= htmlspecialchars($user['name']) ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                        <input type="text" name="jenis_kelamin" class="form-control" id="jenis_kelamin" value="<?= htmlspecialchars($user['jenis_kelamin']) ?>">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Simpan Perubahan</button>
+                    <a href="../auth/logout.php" class="btn btn-outline-danger mt-3"><i class="bi bi-box-arrow-left"></i> Logout</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+    <div class="">
         <h2 class="text-center mb-4">👤 Profil Saya</h2>
 
         <div class="row">
-            <!-- Info Akun -->
+    
             <div class="col-md-6 mb-3">
                 <div class="card shadow-sm">
                     <div class="card-header bg-dark text-white">Informasi Akun</div>
@@ -116,6 +172,3 @@ $result_activities = $stmt2->get_result();
 
     </div>
 
-</body>
-
-</html>

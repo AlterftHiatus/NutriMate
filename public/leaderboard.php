@@ -39,6 +39,7 @@ if (!$user) {
 
 // Ambil data user
 $name = htmlspecialchars($user['name']);
+$avatar = $user['avatar'];
 $height = isset($user['height']) ? (int)$user['height'] : 0;
 $weight = isset($user['weight']) ? (int)$user['weight'] : 0;
 $exp = isset($user['exp']) ? (int)$user['exp'] : 0;
