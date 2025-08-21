@@ -2,10 +2,11 @@
 require_once __DIR__ . '/../config/db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-function registerUser($name, $email, $password, $height, $weight) {
+function registerUser($name, $email, $password, $height, $weight, $jenis_kelamin) {
     global $conn;
 
-    if (!$name || !$email || !$password || !$height || !$weight) {
+    // Validasi field
+    if (!$name || !$email || !$password || !$height || !$weight || !$jenis_kelamin) {
         return "Harap isi semua field.";
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -19,11 +20,15 @@ function registerUser($name, $email, $password, $height, $weight) {
     $check->store_result();
     if ($check->num_rows > 0) return "Email sudah terdaftar.";
 
+    // Hash password
     $hashed = password_hash($password, PASSWORD_DEFAULT);
 
-    // Sesuaikan query INSERT dengan kolom di tabel users
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password, height, weight) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssii", $name, $email, $hashed, $height, $weight);
+     // Tentukan avatar berdasarkan jenis kelamin
+    $avatar = ($jenis_kelamin === "laki-laki") ? "man1_" : "women1_";
+
+    // Query INSERT baru dengan kolom jenis_kelamin
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, height, weight, jenis_kelamin, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssisss", $name, $email, $hashed, $height, $weight, $jenis_kelamin, $avatar);
 
     return $stmt->execute() ? true : "Gagal registrasi.";
 }
