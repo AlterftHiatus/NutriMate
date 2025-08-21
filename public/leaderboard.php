@@ -157,15 +157,22 @@ if (!$found_current_user && $current_user_id) {
                     <?php $rank++; ?>
                 <?php endforeach; ?>
 
-                <?php if ($extra_user): ?>
-                    <div class="list-group-item d-flex justify-content-between align-items-center highlight">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-secondary me-2"><?= $extra_user_rank ?? '-' ?></span>
-                            <span class="fw-medium"><?= htmlspecialchars($extra_user['name']) ?></span>
-                        </div>
-                        <span class="fw-bold"><?= $extra_user['exp'] ?> XP</span>
-                    </div>
-                <?php endif; ?>
+            <?php if ($extra_user): ?>
+            <div class="list-group-item d-flex justify-content-between align-items-center py-3 mb-2 shadow-sm rounded-3 bg-gradient" style="background: linear-gradient(135deg, #f6d365, #fda085);">
+                <div class="d-flex align-items-center position-relative flex-grow-1">
+                    <!-- Rank Badge -->
+                    <span class="badge bg-warning me-3 fs-6"><?= $extra_user_rank ?? '-' ?></span>
+                    
+                    <!-- User Name di tengah -->
+                    <span class="fw-bold fs-5 position-absolute start-50 translate-middle-x text-dark text-center">
+                        <?= htmlspecialchars($extra_user['name']) ?>
+                    </span>
+                </div>
+
+                <!-- XP di kanan -->
+                <span class="fw-bold text-warning"><?= $extra_user['exp'] ?> XP</span>
+            </div>
+            <?php endif; ?>
             <?php else: ?>
                 <p class="text-center">Belum ada peserta.</p>
             <?php endif; ?>
@@ -199,7 +206,7 @@ if (!$found_current_user && $current_user_id) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-left">
                     <a href="index.php?page=profil" class="dropdown-item has-icon">Profile</a>
-                    <a href="../auth/logout.php" class="dropdown-item has-icon text-danger">
+                    <a href="logout.php" class="dropdown-item has-icon text-danger">
                         <i class="fas fa-sign-out-alt"></i> Keluar
                     </a>
                 </div>
