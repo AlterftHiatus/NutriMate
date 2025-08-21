@@ -14,12 +14,6 @@ $user = $result_user->fetch_assoc();
 $avatar_user = htmlspecialchars($user['avatar']);
 $bmi_user = $user['bmi'];
 
-// Hitung BMI jika user ada
-$bmi = null;
-if (!empty($user['height']) && !empty($user['weight'])) {
-    $height_m = $user['height'] / 100; // cm → m
-    $bmi = $user['weight'] / ($height_m * $height_m);
-}
 
 // Ambil aktivitas terakhir (5 aktivitas terbaru)
 $sql_activities = "
