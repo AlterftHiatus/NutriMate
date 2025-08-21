@@ -41,11 +41,69 @@
 }
 
 /* Biar icon tetap rapi */
-ul li {
-  justify-content: flex-start;
+/* ketika sidebar normal */
+ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
+
+ul li {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  padding: 8px 10px;
+  margin: 10px 20px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  transition: border 0.2s ease, background-color 0.2s ease;
+  font-weight: 600;
+}
+
+ul li span {
+  color: white;
+}
+
+ul li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+ul li.active {
+  color: yellow;
+  border: 2px solid yellow;
+  background-color: rgba(163, 182, 56, 0.2);
+}
+
+ul li.active a {
+  color: yellow;
+}
+
+/* ketika sidebar diperkecil */
+.sidebar-collapsed ul li a span {
+  display: none; /* sembunyikan teks */
+}
+
+/* khusus saat sidebar kecil */
 .sidebar-collapsed ul li {
+  margin: 10px auto; /* biar icon di tengah */
+  padding: 8px;
+  width: 50px; /* kotak kecil mengikuti icon */
+  border-radius: 12px;
+}
+
+.sidebar-collapsed ul li.active {
+  border: 2px solid yellow;
+  background-color: rgba(163, 182, 56, 0.2);
+}
+
+.sidebar-collapsed ul li a {
   justify-content: center;
+  gap: 0;
 }
 
 /*TODO : CSS LOADING  */

@@ -46,29 +46,43 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
     <div class="text-center mb-3">
       <button id="toggleSidebar" class="btn btn-sm btn-warning">☰</button>
     </div>
+      <ul class="list-unstyled m-2">
+        <li class="<?= $page === 'daily' ? 'active' : '' ?> pt-2 pb-2">
+          <a href="?page=daily" class="d-flex align-items-center gap-2 w-100">
+            <img src="../assets/images/dashboard/daily.png" alt="" width="40px">
+            <span>daily</span>
+          </a>
+        </li>
 
-    <ul class="list-unstyled m-2">
-      <li class="<?= $page === 'daily' ? 'active' : '' ?> pt-2 pb-2">
-        <img src="../assets/images/dashboard/daily.png" alt="" width="40px">
-        <a href="?page=daily" class="w-100">daily</a>
-      </li>
-      <li class="<?= $page === 'chat' ? 'active' : '' ?> pt-2 pb-2">
-        <img src="../assets/images/dashboard/chatBot.png" alt="" width="40px">
-        <a href="?page=chat" class="w-100">chat bot</a>
-      </li>
-      <li class="<?= $page === 'nutrition' ? 'active' : '' ?> pt-2 pb-2">
-        <img src="../assets/images/dashboard/nutrition.png" alt="" width="40px">
-        <a href="?page=nutrition" class="w-100">nutrition</a>
-      </li>
-      <li class="<?= $page === 'rank' ? 'active' : '' ?> pt-2 pb-2">
-        <img src="../assets/images/dashboard/rank.png" alt="" width="40px">
-        <a href="?page=rank" class="w-100">Scoreboard</a>
-      </li>
-      <li class="<?= $page === 'profil' ? 'active' : '' ?> pt-2 pb-2">
-        <img src="../assets/images/dashboard/profile.png" alt="" width="40px">
-        <a href="?page=profil" class="w-100">Profil</a>
-      </li>
-    </ul>
+        <li class="<?= $page === 'chat' ? 'active' : '' ?> pt-2 pb-2">
+          <a href="?page=chat" class="d-flex align-items-center gap-2 w-100">
+            <img src="../assets/images/dashboard/chatBot.png" alt="" width="40px">
+            <span>chat bot</span>
+          </a>
+        </li>
+
+        <li class="<?= $page === 'nutrition' ? 'active' : '' ?> pt-2 pb-2">
+          <a href="?page=nutrition" class="d-flex align-items-center gap-2 w-100">
+            <img src="../assets/images/dashboard/nutrition.png" alt="" width="40px">
+            <span>nutrition</span>
+          </a>
+        </li>
+
+        <li class="<?= $page === 'rank' ? 'active' : '' ?> pt-2 pb-2">
+          <a href="?page=rank" class="d-flex align-items-center gap-2 w-100">
+            <img src="../assets/images/dashboard/rank.png" alt="" width="40px">
+            <span>Scoreboard</span>
+          </a>
+        </li>
+
+        <li class="<?= $page === 'profil' ? 'active' : '' ?> pt-2 pb-2">
+          <a href="?page=profil" class="d-flex align-items-center gap-2 w-100">
+            <img src="../assets/images/dashboard/profile.png" alt="" width="40px">
+            <span>Profil</span>
+          </a>
+        </li>
+      </ul>
+
   </div>
 
 
@@ -112,11 +126,33 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.getElementById("toggleSidebar").addEventListener("click", function() {
-  document.getElementById("sidebar").classList.toggle("sidebar-collapsed");
-  document.getElementById("mainContent").classList.toggle("expanded");
+const sidebar = document.getElementById("sidebar");
+const content = document.getElementById("mainContent");
+const toggleBtn = document.getElementById("toggleSidebar");
+
+// saat tombol diklik
+toggleBtn.addEventListener("click", function () {
+  sidebar.classList.toggle("sidebar-collapsed");
+  content.classList.toggle("expanded");
+
+  // simpan state ke localStorage
+  if (sidebar.classList.contains("sidebar-collapsed")) {
+    localStorage.setItem("sidebarState", "collapsed");
+  } else {
+    localStorage.setItem("sidebarState", "expanded");
+  }
+});
+
+// saat halaman di-load kembali
+window.addEventListener("DOMContentLoaded", function () {
+  const state = localStorage.getItem("sidebarState");
+  if (state === "collapsed") {
+    sidebar.classList.add("sidebar-collapsed");
+    content.classList.add("expanded");
+  }
 });
 </script>
+
 
 <!-- ALERT -->
 <?php if (isset($_GET['success'])): ?>
