@@ -93,27 +93,11 @@ $resultHistory = $stmtHistory->get_result();
 
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-    body {
-        background-color: #f8f9fa;
-    }
 
-    .streak-badge {
-        font-size: 1.2rem;
-        color: #ff5722;
-        font-weight: bold;
-    }
-
-    .exp-badge {
-        font-size: 1.2rem;
-        color: #2196f3;
-        font-weight: bold;
-    }
-</style>
-<section  class="d-flex gap-5">
+<section  class="d-flex gap-4">
     <div class="todo-container " style="width: 70%;" >
         <div class="mb-4">
-            <h2 class="fw-bold">📊 Dashboard Aktivitas</h2>
+            <h2 class="fw-bold" style="color: rgb(235, 41, 102)">📊 Dashboard Aktivitas</h2>
             <p class="text-muted mb-0">Pantau perkembangan olahraga & progresmu di sini</p>
         </div>
         <!--TODO: HISTORY dan DIAGRAM BATANG -->
@@ -125,8 +109,8 @@ $resultHistory = $stmtHistory->get_result();
         <div class="card p-4 shadow-sm mt-4">
         <h5 class="mb-3 text-center"><i class="bi bi-card-checklist"></i> Riwayat Aktivitas (7 Hari Terakhir)</h5>
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead class="table-light">
+            <table class="table table-striped-bordered">
+                <thead class="table-dark">
                     <tr>
                         <th>Tanggal</th>
                         <th>Aktivitas</th>
@@ -157,7 +141,7 @@ $resultHistory = $stmtHistory->get_result();
     <div class="sideSection" style="width: 30%;">
 
         <!-- TITLE STREAK -->
-        <div class="titleStreak d-flex gap-2 align-items-center justify-content-around mb-4">
+        <div class="titleStreak d-flex gap-1 align-items-center justify-content-around mb-4">
 
             <!-- EXP -->
             <div class="streak d-flex align-items-center">
@@ -191,7 +175,7 @@ $resultHistory = $stmtHistory->get_result();
         </div>
 
         <!-- BUTTON MULAI OLAHRAGA -->
-        <a href="beraktivitas.php" id="start-btn" class="btn btn-info p-3 mb-3 text-white" style="width: 18rem;">Mulai untuk olahraga <i class="bi bi-play-fill"></i></a>
+        <a href="beraktivitas.php" id="start-btn" class="btn btn-info p-3 mb-3 text-white" style="width: 18rem; ">Mulai untuk olahraga <i class="bi bi-play-fill"></i></a>
 
         <div class="character" style="width: 18rem;">
             <div class="card mb-3 pt-2 pb-2">

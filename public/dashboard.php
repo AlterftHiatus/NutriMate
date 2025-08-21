@@ -37,14 +37,14 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
   <!-- SIDEBAR -->
  <div id="sidebar" class="sidebar-menu position-fixed h-100" style="background-color: #3498DB;">
     <div class="title d-flex justify-content-center align-items-center m-3 pe-3 border-bottom pb-3">
-      <img src="../assets/images/avatar/Blue_and_White_3D_Avatar_Profession_Group_Project_Presentation__21_x_35_cm_-removebg-preview.png" alt="" width="60px">
+      <img class="img-title" src="../assets/images/avatar/nut.png" alt="" width="60px" >
       <h4 class="text-white text-center fw-bold ms-2">
-        <span style="color: yellow;">N</span>utri<span style="color: rgb(235, 41, 102);">m</span>ate
+        <span style="color: yellow;">N</span>UTRI<span style="color: rgb(235, 41, 102);">M</span>ATE
       </h4>
     </div>
     <!-- tombol toggle -->
     <div class="text-center mb-3">
-      <button id="toggleSidebar" class="btn btn-sm btn-warning">☰</button>
+      <button id="toggleSidebar" class="btn btn-sm btn-warning text-white fw-bold">☰</button>
     </div>
       <ul class="list-unstyled m-2">
         <li class="<?= $page === 'daily' ? 'active' : '' ?> pt-2 pb-2">
