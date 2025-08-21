@@ -13,11 +13,18 @@ if (!$current_user_id) {
 // Ambil data user + rank
 // ===================================
 $sql_user = "
-    SELECT u.id, u.name, u.exp,
-        (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS user_rank,
-        u.height, u.weight, u.streak
-    FROM users u
-    WHERE u.id = ?
+SELECT 
+    u.id, 
+    u.name, 
+    u.exp,
+    (SELECT COUNT(*) + 1 FROM users WHERE exp > u.exp) AS user_rank,
+    u.height, 
+    u.weight, 
+    u.avatar, 
+    u.bmi, 
+    u.streak
+FROM users u
+WHERE u.id = ?
 ";
 $stmt = $conn->prepare($sql_user);
 $stmt->bind_param("i", $current_user_id);
@@ -187,7 +194,7 @@ if (!$found_current_user && $current_user_id) {
             <!-- PROFILE -->
             <div class="dropdown">
                 <a class="nav-link nav-link-lg nav-link-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img alt="image" src="../assets/images/avatar/man2.png" width="40px" class="rounded-circle mr-1">
+                    <img alt="image" src="../assets/images/avatar/<?php echo $avatar ?>.png" width="40px" class="rounded-circle mr-1">
                 </a>
                 <div class="dropdown-menu dropdown-menu-left">
                     <a href="index.php?page=profil" class="dropdown-item has-icon">Profile</a>

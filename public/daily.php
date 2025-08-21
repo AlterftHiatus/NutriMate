@@ -23,7 +23,7 @@ if ($user_result->num_rows > 0) {
 // ===================================
 //TODO: Ambil data user
 // ===================================
-$stmt = $conn->prepare("SELECT name, exp, height, weight, streak FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT name, exp, height, weight, avatar, bmi,  streak FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -34,6 +34,8 @@ if (!$user) {
     exit;
 }
 $name = htmlspecialchars($user['name']);
+$avatar = htmlspecialchars($user['avatar']);
+$bmi = htmlspecialchars($user['bmi']);
 $height = (int)$user['height'];
 $weight = (int)$user['weight'];
 $exp = (int)$user['exp'];
@@ -163,7 +165,7 @@ $resultHistory = $stmtHistory->get_result();
             <!-- PROFILE -->
             <div class="dropdown">
                 <a class="nav-link nav-link-lg nav-link-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img alt="image" src="../assets/images/avatar/man2.png" width="40px" class="rounded-circle mr-1">
+                    <img alt="image" src="../assets/images/avatar/<?php echo $avatar ?>.png" width="40px" class="rounded-circle mr-1">
                 </a>
                 <div class="dropdown-menu dropdown-menu-left">
                     <a href="index.php?page=profil" class="dropdown-item has-icon ">Profile </a>
@@ -182,7 +184,7 @@ $resultHistory = $stmtHistory->get_result();
                 <p class="fw-bold mb-1 text-center"><?php echo $user['name']; ?></p>
             <!-- Wadah ratio portrait -->
             <div class="ratio" style="--bs-aspect-ratio: 133.33%;">
-            <img src="../assets/images/videos/womenNormal.gif" 
+            <img src="../assets/images/videos/<?php echo $avatar.$bmi; ?>.gif" 
                 alt="Animasi GIF" 
                 class="w-100 h-100 object-fit-cover">
             </div>
