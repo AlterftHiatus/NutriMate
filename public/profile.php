@@ -11,9 +11,26 @@ $stmt->execute();
 $result_user = $stmt->get_result();
 $user = $result_user->fetch_assoc();
 
+$height = $user['height'];
+$weight = $user['weight'];
 $avatar_user = htmlspecialchars($user['avatar']);
 $bmi_user = $user['bmi'];
 
+    $bmi_category = null;
+    if (!empty($height) && !empty($weight) && $height > 0) {
+        $height_m = $height / 100; 
+        $bmi_val = $weight / ($height_m * $height_m);
+
+        if ($bmi_val < 18.5) {
+            $bmi_category = 'kurus';
+        } elseif ($bmi_val < 25) {
+            $bmi_category = 'normal';
+        } elseif ($bmi_val < 30) {
+            $bmi_category = 'gemuk';
+        } else {
+            $bmi_category = 'obesitas';
+        }
+    }
 
 // Ambil aktivitas terakhir (5 aktivitas terbaru)
 $sql_activities = "
@@ -110,15 +127,10 @@ $result_activities = $stmt2->get_result();
                         <p><strong>Tinggi Badan:</strong> <?= $user['height'] ? $user['height'] . " cm" : "-" ?></p>
                         <p><strong>Berat Badan:</strong> <?= $user['weight'] ? $user['weight'] . " kg" : "-" ?></p>
                         <p><strong>BMI:</strong>
-                            <?= $bmi ? number_format($bmi, 1) : "-" ?>
-                            <?php
-                            if ($bmi) {
-                                if ($bmi < 18.5) echo "(Kurus)";
-                                elseif ($bmi < 25) echo "(Normal)";
-                                elseif ($bmi < 30) echo "(Gemuk)";
-                                else echo "(Obesitas)";
-                            }
-                            ?>
+                            <?= $bmi_val ? number_format($bmi_val, 1) : "-" ?>
+                            (<?php
+                                echo $bmi_user
+                            ?>)
                         </p>
                     </div>
                 </div>
