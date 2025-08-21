@@ -158,7 +158,11 @@ $resultHistory = $stmtHistory->get_result();
             
             <!-- STREAK -->
             <div class="streak d-flex align-items-center">
-                <img src="../assets/images/dashboard/redFire.png" alt="" width="40" class="rounded-circle d-block">
+                <?php if ($streak == 0): ?>
+                    <img src="../assets/images/dashboard/blackFire.png" alt="" width="40" class="rounded-circle d-block">
+                <?php else: ?>
+                    <img src="../assets/images/dashboard/redFire.png" alt="" width="40" class="rounded-circle d-block">
+                <?php endif; ?>
                 <p class="mb-0  fw-bold fs-5"><?php echo $streak; ?></p>
             </div>
 

@@ -20,24 +20,43 @@ $user = $result_user->fetch_assoc();
 
 // Proses update jika form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
+    $name   = trim($_POST['name']);
+    $email  = trim($_POST['email']);
     $height = !empty($_POST['height']) ? intval($_POST['height']) : null;
     $weight = !empty($_POST['weight']) ? intval($_POST['weight']) : null;
 
-    $sql_update = "UPDATE users SET name = ?, email = ?, height = ?, weight = ? WHERE id = ?";
+    // Hitung BMI & kategorinya
+    $bmi_category = null;
+    if (!empty($height) && !empty($weight) && $height > 0) {
+        $height_m = $height / 100; 
+        $bmi_val = $weight / ($height_m * $height_m);
+
+        if ($bmi_val < 18.5) {
+            $bmi_category = 'kurus';
+        } elseif ($bmi_val < 25) {
+            $bmi_category = 'normal';
+        } elseif ($bmi_val < 30) {
+            $bmi_category = 'gemuk';
+        } else {
+            $bmi_category = 'obesitas';
+        }
+    }
+
+    $sql_update = "UPDATE users 
+                   SET name = ?, email = ?, height = ?, weight = ?, bmi = ? 
+                   WHERE id = ?";
     $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->bind_param("ssiii", $name, $email, $height, $weight, $user_id);
+    $stmt_update->bind_param("ssissi", $name, $email, $height, $weight, $bmi_category, $user_id);
 
     if ($stmt_update->execute()) {
-        // setelah berhasil, redirect kembali ke profil
-        header("Location: profile.php?success=1");
+        header("Location: dashboard.php?page=profil");
         exit();
     } else {
         $error = "Gagal update profil. Silakan coba lagi.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
