@@ -71,7 +71,7 @@
 }
 
 /* form di bawah */
-form {
+.input-group {
   display: flex;
   align-items: center;
   padding: 8px;
