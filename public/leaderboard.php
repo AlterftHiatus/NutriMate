@@ -216,17 +216,20 @@ if (!$found_current_user && $current_user_id) {
                 </div>
             </div>
         </div>
-        <div class="card bg-light text-dark p-3 mb-3" style="max-width: 400px; border-radius: 12px;">
+        <div class="card bg-light text-dark p-3 mb-3 mt-5" style="max-width: 400px; border-radius: 12px; margin-top: 80px !important;">
+            <div class="link d-flex align-items-center justify-content-between">
+                <h6 class="text-uppercase text-secondary mb-1">DAILY CHALLENGE</h6>
+                <a href="dashboard.php?page=daily" class="text-decoration-none fs-6 text-primary">AYO AKTIVITAS</a>
+            </div>
             <div class="d-flex align-items-center">
                 <!-- Teks -->
                 <div class="flex-grow-1">
-                    <h6 class="text-uppercase text-secondary mb-1">LENCANA BULANAN</h6>
                     <h5 class="fw-bold mb-2">Dapatkan lencana pertamamu!</h5>
                     <p class="mb-0">Selesaikan tantangan setiap bulan untuk mendapatkan lencana eksklusif</p>
                 </div>
                 <!-- Ikon / Gambar -->
                 <div class="ms-3">
-                    <img src="../assets/images/avatar/nut.png" alt="Lencana" style="width:100px; height:100px;">
+                    <img src="../assets/images/avatar/nut_smile.png" alt="Lencana" width="100px">
                 </div>
             </div>
         </div>

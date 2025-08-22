@@ -93,7 +93,7 @@ $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </form>
         </div>
 <div class="card mt-2" style="width: 30%;">
-    <h4 class="p-2 fw-bold text-center">Suggestion Question</h4>
+    <h4 class="p-2 fw-bold text-center">Saran Pertanyaan</h4>
     <div class="card-body d-flex flex-wrap gap-2">
         <?php 
         $suggestions = [

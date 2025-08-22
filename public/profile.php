@@ -120,8 +120,8 @@ $result_activities = $stmt2->get_result();
         </div>
         <p class="card-text fs-5">Halo, <strong><?= htmlspecialchars($user['name']) ?></strong></p>
         <p class="card-text text-muted fst-italic" style="font-size: 14px;">Terdaftar sejak: <strong><?= date("d M Y", strtotime($user['created_at'])) ?></strong></p>
-        <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
-        ✏️ Update Profil
+        <button type="button" class="btn btn-sm rounded-pill px-4 fw-medium" data-bs-toggle="modal" data-bs-target="#updateProfileModal" style="background-color: white; color: #3498DB;">
+        Update Profil
     </div>
     </div>
 <div class="dashboard-section">
@@ -134,7 +134,7 @@ $result_activities = $stmt2->get_result();
                 <div class="card-body d-flex align-items-center gap-3">
                     <img src="../assets/images/dashboard/redFire.png" alt="Icon" width="45px">
                     <div>
-                        <div class="h5 text-success fw-bold"><?= $user['streak'] ?></div>
+                        <div class="h5 fw-bold" style="color: rgb(235, 41, 102);"><?= $user['streak'] ?></div>
                         <div class="text-muted small">Runtunan hari</div>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ $result_activities = $stmt2->get_result();
                 <div class="card-body d-flex align-items-center gap-3">
                     <img src="../assets/images/dashboard/exp.png" alt="Icon" width="45px">
                     <div>
-                        <div class="h5 text-primary fw-bold"><?= $user['exp'] ?></div>
+                        <div class="h5 text-info fw-bold"><?= $user['exp'] ?></div>
                         <div class="text-muted small">Total XP</div>
                     </div>
                 </div>
@@ -167,7 +167,7 @@ $result_activities = $stmt2->get_result();
                 <div class="card-body d-flex align-items-center gap-3">
                     <img src="../assets/images/dashboard/barbel.png" alt="Icon" width="45px">
                     <div>
-                        <div class="h5 text-info fw-bold"><?= $user['bmi'] ?></div>
+                        <div class="h5 text-danger fw-bold"><?= $user['bmi'] ?></div>
                         <div class="text-muted small">Kesehatan badan</div>
                     </div>
                 </div>
@@ -232,7 +232,7 @@ $result_activities = $stmt2->get_result();
 </div>
         <!-- Aktivitas Terakhir -->
         <div class="card shadow-sm mt-4">
-            <div class="card-header bg-success text-white">Aktivitas Terakhir</div>
+            <div class="card-header  text-white" style="background-color: rgb(235, 41, 102);">Aktivitas Terakhir</div>
             <div class="card-body">
                 <?php if ($result_activities->num_rows > 0): ?>
                     <table class="table table-sm table-bordered text-center">
@@ -262,13 +262,6 @@ $result_activities = $stmt2->get_result();
                 <?php endif; ?>
             </div>
         </div>
-
-        <!-- Aksi -->
-        <div class="mt-4 text-center">
-            <a href="logout.php" class="btn btn-danger">Logout</a>
-            <a href="edit_profile.php" class="btn btn-primary">Edit Profil</a>
-        </div>
-
     </div>
 
 <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
