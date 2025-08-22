@@ -24,13 +24,12 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
   <title>Dashboard - Nutrimate</title>
 </head>
 <body>
-  
-<!-- Loader -->
-<!-- <div id="loader-wrapper">
-  <div class="spinner-border text-warning" role="status">
-    <span class="visually-hidden">Loading...</span>
+   
+<!-- LOADING -->
+  <div id="loader-wrapper">
+    <img src="../assets/images/videos/nut.gif" alt="Loading...">
+        <div id="loading-text">Loading</div>
   </div>
-</div> -->
 
 <div class="d-flex h-100 w-100">
   <!-- SIDEBAR -->
@@ -201,15 +200,21 @@ window.addEventListener("DOMContentLoaded", function () {
 </script>
 <?php endif; ?>
 
-<script>
+  <script>
+    // Animasi titik-titik berjalan
+    const loadingText = document.getElementById("loading-text");
+    let dots = 0;
 
-  //? INI ADALAH LOADER
+    setInterval(() => {
+      dots = (dots + 1) % 4; // 0,1,2,3
+      loadingText.textContent = "Loading" + ".".repeat(dots);
+    }, 500);
 
-  // window.addEventListener("load", function () {
-  //   const loader = document.getElementById("loader-wrapper");
-  //   loader.style.display = "none";
-  // });
+    // Hilangkan loader setelah halaman selesai
+    window.addEventListener("load", function () {
+      const loader = document.getElementById("loader-wrapper");
+      loader.style.display = "none";
+    });
 </script>
-
 </body>
 </html>
