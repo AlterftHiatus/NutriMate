@@ -190,7 +190,8 @@ $resultHistory = $stmtHistory->get_result();
             <div class="ratio" style="--bs-aspect-ratio: 133.33%;">
             <img src="../assets/images/videos/<?php echo $avatar.$bmi; ?>.gif" 
                 alt="Animasi GIF" 
-                class="w-100 h-100 object-fit-cover">
+                class="w-100 h-100 object-fit-cover"
+                loading="lazy">
             </div>
 
             <div class="description align-items-center text-center mt-2">

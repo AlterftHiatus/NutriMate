@@ -46,7 +46,9 @@ $stmt2->bind_param("i", $user_id);
 $stmt2->execute();
 $result_activities = $stmt2->get_result();
 ?>
+<style>
 
+</style>
 <body class="bg-light">
     <div class="card shadow-sm mb-4 bg-info">
     <div class="card-body text-center">
@@ -69,7 +71,8 @@ $result_activities = $stmt2->get_result();
                 <div class="ratio" style="--bs-aspect-ratio: 133.33%;">
                     <img src="../assets/images/videos/<?= $avatar_user.$bmi_user ?>.gif" 
                          alt="Animasi GIF" 
-                         class="w-100 h-100 object-fit-cover">
+                         class="w-100 h-100 object-fit-cover"
+                         loading="lazy">
                 </div>
             </div>
         </div>
@@ -80,6 +83,10 @@ $result_activities = $stmt2->get_result();
             <form action="process/simpan_profile.php" method="post">
                 <div class="p-3">
                     <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
+                    <div class="mb-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($user['email']) ?>">
+                    </div>
                     <div class="mb-2">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($user['email']) ?>">
