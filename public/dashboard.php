@@ -48,21 +48,21 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
         <li class="<?= $page === 'daily' ? 'active' : '' ?> pt-2 pb-2">
           <a href="?page=daily" class="d-flex align-items-center gap-2 w-100">
             <img src="../assets/images/dashboard/daily.png" alt="" width="40px">
-            <span>daily</span>
+            <span>Daily</span>
           </a>
         </li>
 
         <li class="<?= $page === 'chat' ? 'active' : '' ?> pt-2 pb-2">
           <a href="?page=chat" class="d-flex align-items-center gap-2 w-100">
             <img src="../assets/images/dashboard/chatBot.png" alt="" width="40px">
-            <span>chat bot</span>
+            <span>Chat Nut</span>
           </a>
         </li>
 
         <li class="<?= $page === 'nutrition' ? 'active' : '' ?> pt-2 pb-2">
           <a href="?page=nutrition" class="d-flex align-items-center gap-2 w-100">
             <img src="../assets/images/dashboard/nutrition.png" alt="" width="40px">
-            <span>nutrition</span>
+            <span>Nutrition</span>
           </a>
         </li>
 

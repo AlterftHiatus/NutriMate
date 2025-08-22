@@ -57,8 +57,18 @@ $stmt = $pdo->prepare("SELECT * FROM chat_history WHERE user_id = ? ORDER BY cre
 $stmt->execute([$user_id]);
 $chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<div class="containerChat">
-    
+<div class="header d-flex justify-content-between mb-1">
+    <div class="chat-header text-start rounded d-flex">
+        <img src="../assets/images/avatar/nut_chat.png" alt="" width="80px">
+        <div class="description">
+            <h4 class="fw-bold">Tanya Seputar Kesehatan!</h4>
+            <p class="">Nut akan membantu dan menjawab semua pertanyaan kamu.</p>
+        </div>
+    </div>
+
+
+    <!-- STREAK, XP, PROFILE -->
+
 </div>
     <div class="sectionContainer d-flex gap-1 w-100">
         <div class="chat-container">

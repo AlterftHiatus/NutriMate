@@ -99,7 +99,7 @@ $resultHistory = $stmtHistory->get_result();
 <section  class="d-flex gap-4">
     <div class="todo-container " style="width: 70%;" >
         <div class="mb-4">
-            <h2 class="fw-bold" style="color: rgb(235, 41, 102)">📊 Dashboard Aktivitas</h2>
+            <h2 class="fw-bold" style="color: rgb(235, 41, 102)">Dashboard Aktivitas</h2>
             <p class="text-muted mb-0">Pantau perkembangan olahraga & progresmu di sini</p>
         </div>
         <!--TODO: HISTORY dan DIAGRAM BATANG -->
