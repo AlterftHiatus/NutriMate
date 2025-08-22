@@ -20,10 +20,10 @@ $user = $result_user->fetch_assoc();
 
 // Proses update jika form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name   = trim($_POST['name']);
-    $email  = trim($_POST['email']);
-    $height = !empty($_POST['height']) ? intval($_POST['height']) : null;
-    $weight = !empty($_POST['weight']) ? intval($_POST['weight']) : null;
+    $name   = trim($_POST['nama']);
+    $jenis_kelamin = trim($_POST['jenis_kelamin']);
+    $height = !empty($_POST['tinggi_badan']) ? intval($_POST['tinggi_badan']) : null;
+    $weight = !empty($_POST['berat_badan']) ? intval($_POST['berat_badan']) : null;
 
     // Hitung BMI & kategorinya
     $bmi_category = null;

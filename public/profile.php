@@ -120,7 +120,8 @@ $result_activities = $stmt2->get_result();
         </div>
         <p class="card-text fs-5">Halo, <strong><?= htmlspecialchars($user['name']) ?></strong></p>
         <p class="card-text text-muted fst-italic" style="font-size: 14px;">Terdaftar sejak: <strong><?= date("d M Y", strtotime($user['created_at'])) ?></strong></p>
-        <a href="#" class="btn btn-primary btn-sm rounded-pill px-4">Go somewhere</a>
+        <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
+        ✏️ Update Profil
     </div>
     </div>
 <div class="dashboard-section">
@@ -188,41 +189,46 @@ $result_activities = $stmt2->get_result();
 
     <!-- Data Diri -->
     <div class="datadiri">
-        <h5 class="fw-bold mb-3 text-info"><i class="bi bi-person-lines-fill"></i> Data Kesehatan</h5>
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form action="process/simpan_profile.php" method="post">
-                    <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
-                    <div class="mb-2">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" class="form-control" id="nama" 
-                               value="<?= htmlspecialchars($user['name']) ?>">
-                    </div>
+    <h5 class="fw-bold mb-3 text-info"><i class="bi bi-person-lines-fill"></i> Data Kesehatan</h5>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="process/simpan_profile.php" method="post">
+                <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
 
-                    <div class="mb-2">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <input type="text" name="jenis_kelamin" class="form-control" id="jenis_kelamin" 
-                               value="<?= htmlspecialchars($user['jenis_kelamin']) ?>" readonly>
-                    </div>
-                    <div class="mb-2">
-                        <label for="tinggi_badan" class="form-label">Tinggi Badan</label>
-                        <input type="text" name="tinggi_badan" class="form-control" id="tinggi_badan" 
-                               value="<?= $height ?>" readonly>
-                    </div>
-                    <div class="mb-2">
-                        <label for="berat_badan" class="form-label">Berat Badan</label>
-                        <input type="text" name="berat_badan" class="form-control" id="berat_badan" 
-                               value="<?= $weight ?>" readonly>
-                    </div>
-                    <div class="mb-2">
-                        <label for="bmi" class="form-label">BMI</label>
-                        <input type="text" name="bmi" class="form-control" id="bmi" 
-                               value=" <?= $bmi_val ? number_format($bmi_val, 1) : "-" ?> (<?php echo $bmi_user?>)" readonly>
-                    </div>
-                </form>
-            </div>
+                <div class="mb-2">
+                    <label for="nama" class="form-label">Nama Lengkap</label>
+                    <input type="text" name="nama" class="form-control" id="namaField"
+                           value="<?= htmlspecialchars($user['name']) ?>" readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                    <input type="text" name="jenis_kelamin" class="form-control" id="genderField"
+                           value="<?= $user['jenis_kelamin'] ?>" readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label for="tinggi_badan" class="form-label">Tinggi Badan</label>
+                    <input type="text" name="tinggi_badan" class="form-control" id="tinggiField"
+                           value="<?= $height ?>" readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label for="berat_badan" class="form-label">Berat Badan</label>
+                    <input type="text" name="berat_badan" class="form-control" id="beratField"
+                           value="<?= $weight ?>" readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label for="bmi" class="form-label">BMI</label>
+                    <input type="text" name="bmi" class="form-control" id="bmiField"
+                           value="<?= $bmi_val ? number_format($bmi_val, 1) : "-" ?> (<?= $bmi_user ?>)" readonly>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
 </div>
         <!-- Aktivitas Terakhir -->
         <div class="card shadow-sm mt-4">
@@ -265,3 +271,49 @@ $result_activities = $stmt2->get_result();
 
     </div>
 
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="updateProfileForm" action="edit_profile.php" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateProfileModalLabel">Update Data Kesehatan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
+            
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama" name="nama" 
+                       value="<?= htmlspecialchars($user['name']) ?>">
+            </div>
+            <div class="mb-3">
+                <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
+                    <option value="Laki-Laki" <?= $user['jenis_kelamin']=="Laki-Laki"?"selected":"" ?>>Laki-Laki</option>
+                    <option value="Perempuan" <?= $user['jenis_kelamin']=="Perempuan"?"selected":"" ?>>Perempuan</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="tinggi_badan" class="form-label">Tinggi Badan (cm)</label>
+                <input type="number" class="form-control" id="tinggi_badan" name="tinggi_badan" 
+                       value="<?= $height ?>">
+            </div>
+            <div class="mb-3">
+                <label for="berat_badan" class="form-label">Berat Badan (kg)</label>
+                <input type="number" class="form-control" id="berat_badan" name="berat_badan" 
+                       value="<?= $weight ?>">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Alert feedback -->
+<div id="profileAlert" class="alert mt-3 d-none" role="alert"></div>
