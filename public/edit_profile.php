@@ -25,6 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $height = !empty($_POST['tinggi_badan']) ? intval($_POST['tinggi_badan']) : null;
     $weight = !empty($_POST['berat_badan']) ? intval($_POST['berat_badan']) : null;
 
+    $avatar = null;
+    if ($jenis_kelamin == 'laki-laki') {
+        $avatar = 'man1_';
+    }else{
+        $avatar = 'women1_';
+    }
     // Hitung BMI & kategorinya
     $bmi_category = null;
     if (!empty($height) && !empty($weight) && $height > 0) {
@@ -43,10 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $sql_update = "UPDATE users 
-                   SET name = ?, email = ?, height = ?, weight = ?, bmi = ? 
+                   SET name = ?, height = ?, weight = ?, bmi = ?, avatar = ?, jenis_kelamin = ? 
                    WHERE id = ?";
     $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->bind_param("ssissi", $name, $email, $height, $weight, $bmi_category, $user_id);
+    $stmt_update->bind_param("sddsssi", $name, $height, $weight, $bmi_category, $avatar, $jenis_kelamin, $user_id);
 
     if ($stmt_update->execute()) {
         header("Location: dashboard.php?page=profil");
@@ -57,53 +63,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Profil</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="bg-light">
-
-<div class="container mt-5">
-    <a href="profil.php" class="mb-4 d-inline-block">⬅ Kembali ke Profil</a>
-
-    <h2 class="text-center mb-4">✏️ Edit Profil</h2>
-
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
-    <?php endif; ?>
-
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Nama</label>
-                    <input type="text" name="name" class="form-control" 
-                           value="<?= htmlspecialchars($user['name']) ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" 
-                           value="<?= htmlspecialchars($user['email']) ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Tinggi Badan (cm)</label>
-                    <input type="number" name="height" class="form-control" 
-                           value="<?= htmlspecialchars($user['height']) ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Berat Badan (kg)</label>
-                    <input type="number" name="weight" class="form-control" 
-                           value="<?= htmlspecialchars($user['weight']) ?>">
-                </div>
-                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-</body>
-</html>

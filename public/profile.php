@@ -283,8 +283,8 @@ $result_activities = $stmt2->get_result();
             <div class="mb-3">
                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                 <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
-                    <option value="Laki-Laki" <?= $user['jenis_kelamin']=="Laki-Laki"?"selected":"" ?>>Laki-Laki</option>
-                    <option value="Perempuan" <?= $user['jenis_kelamin']=="Perempuan"?"selected":"" ?>>Perempuan</option>
+                    <option value="laki-laki" <?= $user['jenis_kelamin']=="Laki-Laki"?"selected":"" ?>>Laki-Laki</option>
+                    <option value="perempuan" <?= $user['jenis_kelamin']=="Perempuan"?"selected":"" ?>>Perempuan</option>
                 </select>
             </div>
             <div class="mb-3">
