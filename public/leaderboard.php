@@ -86,46 +86,46 @@ if (!$found_current_user && $current_user_id) {
 ?>
 <style>
     .highlight {
-        background-color: #fff3cd !important;
-        /* kuning soft */
-        border-left: 4px solid #ffc107;
-    }
+  background-color: #fff3cd !important;
+  /* kuning soft */
+  border-left: 4px solid #ffc107;
+}
 
-    .scoreboard-card {
-        background-color: #2a2a40;
-        border-radius: 1rem;
-        color: white;
-        width: 320px;
-    }
+.scoreboard-card {
+  background-color: #2a2a40;
+  border-radius: 1rem;
+  color: white;
+  width: 320px;
+}
 
-    .avatar {
-        width: 55px;
-        height: 55px;
-        border-radius: 50%;
-        border: 2px solid #4dabf7;
-        object-fit: cover;
-    }
+.avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #4dabf7;
+  object-fit: cover;
+}
 
-    .status-dot {
-        position: absolute;
-        bottom: 4px;
-        right: 4px;
-        width: 12px;
-        height: 12px;
-        background-color: #4ade80;
-        border: 2px solid #2a2a40;
-        border-radius: 50%;
-    }
+.status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  background-color: #4ade80;
+  border: 2px solid #2a2a40;
+  border-radius: 50%;
+}
 
-    .icon-box {
-        background-color: #3a3a55;
-        padding: 10px;
-        border-radius: 10px;
-        text-align: center;
-        font-size: 20px;
-    }
+.icon-box {
+  background-color: #3a3a55;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 20px;
+}
+
 </style>
-
 <div class="classContainer d-flex gap-4">
     <div class="score" style="width: 70%;">
         <div class="text-center mb-4">
@@ -161,7 +161,7 @@ if (!$found_current_user && $current_user_id) {
             <div class="list-group-item d-flex justify-content-between align-items-center py-3 mb-2 shadow-sm rounded-3 bg-gradient" style="background: linear-gradient(135deg, #f6d365, #fda085);">
                 <div class="d-flex align-items-center position-relative flex-grow-1">
                     <!-- Rank Badge -->
-                    <span class="badge bg-warning me-3 fs-6"><?= $rank ?? '-' ?></span>
+                    <span class="badge bg-warning me-3 fs-6"><?= $extra_user_rank ?></span>
                     
                     <!-- User Name di tengah -->
                     <span class="fw-bold fs-5 position-absolute start-50 translate-middle-x text-dark text-center">

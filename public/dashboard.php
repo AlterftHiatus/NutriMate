@@ -19,9 +19,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../assets/css/dashboard.css">
   <link rel="stylesheet" href="../assets/css/chat.css">
+  <link rel="stylesheet" href="../assets/css/leaderboard.css">
   <title>Dashboard - Nutrimate</title>
 </head>
-<body>
+<body>  
    
 <!-- LOADING -->
   <div id="loader-wrapper">
@@ -35,7 +36,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
     <div class="title d-flex justify-content-center align-items-center m-3 pe-3 border-bottom pb-3">
       <img class="img-title" src="../assets/images/avatar/nut.png" alt="" width="60px" >
       <h4 class="text-white text-center fw-bold ms-2">
-        <span style="color: yellow;">N</span>UTRI<span style="color: rgb(235, 41, 102);">M</span>ATE
+        <span style="color: rgb(235, 41, 102);">NUT</span>RIMATE
       </h4>
     </div>
     <!-- tombol toggle -->
