@@ -149,54 +149,30 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
-<!-- ALERT -->
-<?php if (isset($_GET['success'])): ?>
-<script>
-
-  //? INI ADALAH ALERT SELESAI, EDIT, DAN HAPUS
-
-  document.addEventListener("DOMContentLoaded", function () {
-    <?php if ($_GET['success'] === 'edit'): ?>
+<?php if (isset($_SESSION['alert'])): ?>
+  <script>
+    <?php if ($_SESSION['alert'] === 'success'): ?>
       Swal.fire({
         icon: 'success',
-        title: 'Data Berhasil Diedit! ✏️',
-        text: 'Datamu sudah diperbarui dengan manis!',
-        background: '#fffbe6',
-        iconColor: '#ffc107',
-        confirmButtonColor: '#ffc107'
-      });
-    <?php elseif ($_GET['success'] === 'selesai'): ?>
-      Swal.fire({
-        icon: 'success',
-        title: 'Tugasmu Sudah Selesai! 🎉',
-        text: 'Selamat, kamu sudah menyelesaikan daily ini!',
+        title: 'Berhasil!',
+        text: 'Profilmu telah diperbarui dengan manis!',
         background: '#a7ddfa',
         iconColor: '#03a5fc',
         confirmButtonColor: '#03a5fc'
       });
-    <?php elseif ($_GET['success'] === 'hapus'): ?>
+    <?php elseif ($_SESSION['alert'] === 'error'): ?>
       Swal.fire({
         icon: 'error',
-        title: 'Data Berhasil Dihapus! <i class="bi bi-trash"></i>',
-        text: 'Datamu sudah pergi untuk selamanya...',
-        background: '#fff0f0',
-        iconColor: '#dc3545',
-        confirmButtonColor: '#dc3545'
-      });
-    <?php elseif ($_GET['success'] === 'add'): ?>
-      Swal.fire({
-        icon: 'success',
-        title: 'Data Berhasil Ditambahkan! 📒',
-        text: 'Data baru sudah tersimpan dengan rapi!',
-        background: '#e9fce9',
-        iconColor: '#28a745',
-        confirmButtonColor: '#28a745'
+        title: 'Gagal!',
+        text: 'Terjadi kesalahan saat memperbarui profilmu.',
+        background: '#fddede',
+        iconColor: '#e74c3c',
+        confirmButtonColor: '#e74c3c'
       });
     <?php endif; ?>
-  });
-</script>
-<?php endif; ?>
+  </script>
+<?php unset($_SESSION['alert']); endif; ?>
+
 
   <script>
     // Animasi titik-titik berjalan

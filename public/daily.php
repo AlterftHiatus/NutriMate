@@ -110,8 +110,8 @@ $resultHistory = $stmtHistory->get_result();
 
         <div class="card p-4 shadow-sm mt-4">
         <h5 class="mb-3 text-center"><i class="bi bi-card-checklist"></i> Riwayat Aktivitas (7 Hari Terakhir)</h5>
-        <div class="table-responsive">
-            <table class="table table-striped-bordered">
+        <div class="table-responsive rounded">
+            <table class="table table-striped-bordered border text-center table-hover">
                 <thead class="table-dark">
                     <tr>
                         <th>Tanggal</th>
@@ -128,7 +128,7 @@ $resultHistory = $stmtHistory->get_result();
                                 <td><?php echo date('d M Y', strtotime($row['activity_date'])); ?></td>
                                 <td><?php echo htmlspecialchars($row['activity_name']); ?></td>
                                 <td><?php echo (int)$row['duration_minutes']; ?></td>
-                                <td><?php echo (int)$row['calories_burned']; ?></td>
+                                <td><?php echo (int)$row['calories_burned']; ?> kcal</td>
                                 <td><?php echo (int)$row['exp_earned']; ?></td>
                             </tr>
                         <?php endwhile; ?>

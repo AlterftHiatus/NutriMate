@@ -12,141 +12,13 @@ if (!isAuthenticated()) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Beraktivitas — Health Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-    <style>
-        body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-            margin: 0;
-            background: #f7f7f9;
-        }
-
-        header {
-            padding: 12px 16px;
-            background: #111;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        header a {
-            color: #fff;
-            text-decoration: none;
-            opacity: .9;
-        }
-
-        .wrap {
-            max-width: 960px;
-            margin: 16px auto;
-            padding: 0 16px;
-        }
-
-        .card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 14px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
-        }
-
-        .grid {
-            display: grid;
-            gap: 12px;
-        }
-
-        @media (min-width: 900px) {
-            .grid-2 {
-                grid-template-columns: 1.1fr .9fr;
-            }
-        }
-
-        #map {
-            width: 100%;
-            height: 52vh;
-            border-radius: 10px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        select,
-        button {
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background: #fff;
-            cursor: pointer;
-        }
-
-        button.primary {
-            background: #2563eb;
-            color: #fff;
-            border-color: #2563eb;
-        }
-
-        button.danger {
-            background: #ef4444;
-            color: #fff;
-            border-color: #ef4444;
-        }
-
-        button:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .stat {
-            background: #f3f4f6;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .stat .label {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .stat .value {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .note {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 8px;
-        }
-
-        .summary {
-            margin-top: 12px;
-            padding: 12px;
-            background: #ecfeff;
-            border: 1px solid #a5f3fc;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .summary strong {
-            display: inline-block;
-            min-width: 90px;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/aktivitas.css" />
 </head>
 
 <body>
@@ -402,7 +274,7 @@ if (!isAuthenticated()) {
             stopTracking();
         });
 
-        btnFinish.addEventListener('click', async () => {
+btnFinish.addEventListener('click', async () => {
     btnFinish.disabled = true;
     btnFinish.textContent = "Menyimpan...";
     
@@ -440,17 +312,33 @@ if (!isAuthenticated()) {
             throw new Error(data.message || 'Save failed');
         }
 
-        alert('Data tersimpan!');
-        window.location.href = 'dashboard.php';
+        // ✅ Notifikasi sukses dengan SweetAlert2
+    Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil Diedit!',
+        text: data.message || 'Datamu sudah diperbarui dengan manis!',
+        background: '#fffbe6',
+        iconColor: '#ffc107',
+        timer: 2000,
+        confirmButtonColor: '#ffc107'
+      }).then(() => {
+            window.location.href = 'dashboard.php';
+        });
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Gagal menyimpan: ' + error.message);
+        // ❌ Notifikasi gagal dengan SweetAlert2
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: error.message
+        });
     } finally {
         btnFinish.disabled = false;
         btnFinish.textContent = "Selesai";
     }
 });
+
 
         // Initialize
         initMap();

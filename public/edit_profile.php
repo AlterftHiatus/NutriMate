@@ -54,12 +54,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->bind_param("sddsssi", $name, $height, $weight, $bmi_category, $avatar, $jenis_kelamin, $user_id);
 
-    if ($stmt_update->execute()) {
-        header("Location: dashboard.php?page=profil");
-        exit();
-    } else {
-        $error = "Gagal update profil. Silakan coba lagi.";
-    }
+if ($stmt_update->execute()) {
+    $_SESSION['alert'] = [
+        'type' => 'success',
+        'message' => 'Profil berhasil diperbarui!'
+    ];
+    header("Location: dashboard.php?page=profil");
+    exit();
+} else {
+    $_SESSION['alert'] = [
+        'type' => 'error',
+        'message' => 'Gagal update profil. Silakan coba lagi.'
+    ];
+    header("Location: dashboard.php?page=profil");
+    exit();
+}
 }
 ?>
 
