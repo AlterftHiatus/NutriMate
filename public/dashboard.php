@@ -267,15 +267,16 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 <?php if (isset($_SESSION['alert'])): ?>
 <script>
   Swal.fire({
-    icon: '<?= $_SESSION['alert'] === 'success' ? 'success' : 'error' ?>',
-    title: '<?= $_SESSION['alert'] === 'success' ? 'Berhasil!' : 'Gagal!' ?>',
-    text: '<?= $_SESSION['alert'] === 'success' ? 'Profilmu telah diperbarui dengan manis!' : 'Terjadi kesalahan saat memperbarui profilmu.' ?>',
-    background: '<?= $_SESSION['alert'] === 'success' ? '#a7ddfa' : '#fddede' ?>',
-    iconColor: '<?= $_SESSION['alert'] === 'success' ? '#03a5fc' : '#e74c3c' ?>',
-    confirmButtonColor: '<?= $_SESSION['alert'] === 'success' ? '#03a5fc' : '#e74c3c' ?>'
+    icon: '<?= $_SESSION['alert']['type'] === 'success' ? 'success' : 'error' ?>',
+    title: '<?= $_SESSION['alert']['type'] === 'success' ? 'Berhasil!' : 'Gagal!' ?>',
+    text: '<?= $_SESSION['alert']['message'] ?>',
+    background: '<?= $_SESSION['alert']['type'] === 'success' ? '#a7ddfa' : '#fddede' ?>',
+    iconColor: '<?= $_SESSION['alert']['type'] === 'success' ? '#03a5fc' : '#e74c3c' ?>',
+    confirmButtonColor: '<?= $_SESSION['alert']['type'] === 'success' ? '#03a5fc' : '#e74c3c' ?>'
   });
 </script>
 <?php unset($_SESSION['alert']); endif; ?>
+
 
 </body>
 <?php ob_end_flush(); ?>

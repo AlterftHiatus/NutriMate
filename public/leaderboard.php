@@ -109,29 +109,20 @@ if (!$found_current_user && $current_user_id) {
   font-size: 0.95rem;
 }
 .status-avatar-wrapper {
-  position: relative;   /* ini kunci biar bubble nempel ke avatar */
-  display: inline-block;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;      /* biar center */
+  margin-bottom: 1rem;
 }
 
 .status-avatar-wrapper img {
+  display: block;
   border-radius: 50%;
   border: 2px solid #ddd;
-  display: block;
 }
 
-/* bubble di card */
-.status-avatar-wrapper .emot-bubble {
-  position: absolute;
-  top: 0;   /* pojok bawah kanan avatar */
-  right: 0;
-  transform: translate(35%, 0); /* sedikit keluar biar manis */
-  background: #fff;
-  border-radius: 50%;
-  font-size: 18px;
-  padding: 6px 8px;
-  line-height: 1;
-  box-shadow: 0 0 3px rgba(0,0,0,0.3);
-}
 
 #user-emot:empty {
   display: none;
@@ -282,9 +273,6 @@ if (!$found_current_user && $current_user_id) {
             <div class="status-avatar-wrapper my-4">
               <img src="../assets/images/avatar/<?= $avatar ?>.png" 
                   alt="avatar" width="80" height="80">
-              <?php if (!empty($user['status_emot'])): ?>
-                <span class="emot-bubble user-emot"><?= htmlspecialchars($user['status_emot']) ?></span>
-              <?php endif; ?>
             </div>
           <div class="d-flex flex-wrap gap-2">
             <?php 

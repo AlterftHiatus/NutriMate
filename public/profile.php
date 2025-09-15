@@ -115,6 +115,8 @@ $result_activities = $stmt2->get_result();
   transform: scale(1.1);
 }
 
+
+
 </style>
 <body class="bg-light">
     <div class="card shadow-sm mb-4 bg-info">
@@ -133,54 +135,69 @@ $result_activities = $stmt2->get_result();
     </div>
 <div class="dashboard-section">
     <!-- Statistik -->
-    <div class="statistik">
-        <h5 class="fw-bold mb-3 text-info"><i class="bi bi-graph-up fw-bold"></i> Statistik</h5>
-        <div class="d-flex flex-wrap gap-3">
+        <div class="statistik">
+        <h5 class="fw-bold mb-3 text-info">
+            <i class="bi bi-graph-up fw-bold"></i> Statistik
+        </h5>
+
+        <div class="row g-3">
             <!-- Card 1 -->
-            <div class="card shadow-sm border-0 flex-fill">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <img src="../assets/images/dashboard/redFire.png" alt="Icon" width="45px">
-                    <div>
-                        <div class="h5 fw-bold" style="color: rgb(235, 41, 102);"><?= $user['streak'] ?></div>
-                        <div class="text-muted small">Runtunan hari</div>
+            <div class="col-6 col-lg-12">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <img src="../assets/images/dashboard/redFire.png" alt="Icon" width="45px">
+                        <div>
+                            <div class="h5 fw-bold" style="color: rgb(235, 41, 102);"><?= $user['streak'] ?></div>
+                            <div class="text-muted small">Runtunan hari</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 2 -->
-            <div class="card shadow-sm border-0 flex-fill">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <img src="../assets/images/dashboard/gold.png" alt="Icon" width="45px">
-                    <div>
-                        <div class="h5 text-warning fw-bold"><?= $user_rank ?></div>
-                        <div class="text-muted small">Posisi <?= $user_rank ?> Besar</div>
+            <div class="col-6 col-lg-12">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <img src="../assets/images/dashboard/gold.png" alt="Icon" width="45px">
+                        <div>
+                            <div class="h5 text-warning fw-bold"><?= $user_rank ?></div>
+                            <div class="text-muted small">Posisi <?= $user_rank ?> Besar</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 3 -->
-            <div class="card shadow-sm border-0 flex-fill">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <img src="../assets/images/dashboard/exp.png" alt="Icon" width="45px">
-                    <div>
-                        <div class="h5 text-info fw-bold"><?= $user['exp'] ?></div>
-                        <div class="text-muted small">Total XP</div>
+            <div class="col-6 col-lg-12">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <img src="../assets/images/dashboard/exp.png" alt="Icon" width="45px">
+                        <div>
+                            <div class="h5 text-info fw-bold"><?= $user['exp'] ?></div>
+                            <div class="text-muted small">Total XP</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 4 -->
-            <div class="card shadow-sm border-0 flex-fill">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <img src="../assets/images/dashboard/barbel.png" alt="Icon" width="45px">
-                    <div>
-                        <div class="h5 text-danger fw-bold"><?= $user['bmi'] ?></div>
-                        <div class="text-muted small">Kesehatan badan</div>
+            <div class="col-6 col-lg-12">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <img src="../assets/images/dashboard/barbel.png" alt="Icon" width="45px">
+                        <div>
+                            <div class="h5 text-danger fw-bold"><?= $user['bmi'] ?></div>
+                            <div class="text-muted small">Kesehatan badan</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
 
     <!-- Character GIF -->
     <div class="character">
@@ -199,7 +216,7 @@ $result_activities = $stmt2->get_result();
     <h5 class="fw-bold mb-3 text-info"><i class="bi bi-person-lines-fill"></i> Data Kesehatan</h5>
     <div class="card shadow-sm">
         <div class="card-body">
-            <form action="process/simpan_profile.php" method="post">
+            <form>
                 <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
 
                 <div class="mb-2">
@@ -274,7 +291,7 @@ $result_activities = $stmt2->get_result();
 <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="updateProfileForm" action="edit_profile.php" method="post">
+      <form id="updateProfileForm" action="../process/update_profile_data.php" method="post">
         <div class="modal-header">
           <h5 class="modal-title" id="updateProfileModalLabel">Update Data Kesehatan</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
