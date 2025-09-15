@@ -29,8 +29,8 @@
   justify-content: flex-end;
 }
 .chat-row.user .message {
-  background: #ee41b4ff;
-  color: #fff;
+  background: #d0ebff;
+  color: #003366;
   border-bottom-right-radius: 4px;
 }
 .chat-row.user .avatar {
@@ -42,8 +42,9 @@
   justify-content: flex-start;
 }
 .chat-row.bot .message {
-  background: yellow;
+  background: #f1f0f0;
   color: #333;
+  border: 1px solid #ddd;
   border-bottom-left-radius: 4px;
 }
 

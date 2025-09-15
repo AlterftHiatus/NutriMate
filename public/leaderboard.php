@@ -22,7 +22,8 @@ SELECT
     u.weight, 
     u.avatar, 
     u.bmi, 
-    u.streak
+    u.streak,
+    u.status_emot
 FROM users u
 WHERE u.id = ?
 ";
@@ -49,7 +50,7 @@ $user_rank = isset($user['user_rank']) ? (int)$user['user_rank'] : 0;
 // ===================================
 // Ambil top 10 user berdasarkan EXP
 // ===================================
-$sql_top = "SELECT id, name, exp FROM users ORDER BY exp DESC LIMIT 10";
+$sql_top = "SELECT id, name, exp, status_emot, avatar FROM users ORDER BY exp DESC LIMIT 10";
 $result = $conn->query($sql_top);
 
 $top_users = [];
@@ -68,7 +69,7 @@ if ($result->num_rows > 0) {
 $extra_user = null;
 $extra_user_rank = null;
 if (!$found_current_user && $current_user_id) {
-    $stmt = $conn->prepare("SELECT id, name, exp FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, name, exp, status_emot, avatar FROM users WHERE id = ?");
     $stmt->bind_param("i", $current_user_id);
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -84,6 +85,63 @@ if (!$found_current_user && $current_user_id) {
     }
 }
 ?>
+<style>
+.emot-bubble {
+  position: absolute;
+  top: -5px;   /* sedikit masuk ke avatar */
+  right: -5px;
+  background: #fff;
+  border-radius: 50%;
+  font-size: 14px;   /* kecilin */
+  padding: 4px;
+  line-height: 1;
+  box-shadow: 0 0 3px rgba(0,0,0,0.3);
+}
+.position-relative {
+  width: 50px;
+  height: 50px;   /* fix tinggi */
+}
+.titleStreaklead img {
+  display: block;
+}
+.titleStreaklead span {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.status-avatar-wrapper {
+  position: relative;   /* ini kunci biar bubble nempel ke avatar */
+  display: inline-block;
+}
+
+.status-avatar-wrapper img {
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  display: block;
+}
+
+/* bubble di card */
+.status-avatar-wrapper .emot-bubble {
+  position: absolute;
+  top: 0;   /* pojok bawah kanan avatar */
+  right: 0;
+  transform: translate(35%, 0); /* sedikit keluar biar manis */
+  background: #fff;
+  border-radius: 50%;
+  font-size: 18px;
+  padding: 6px 8px;
+  line-height: 1;
+  box-shadow: 0 0 3px rgba(0,0,0,0.3);
+}
+
+#user-emot:empty {
+  display: none;
+}
+
+.user-emot:empty {
+  display: none; /* otomatis hilang kalau kosong */
+}
+
+</style>
 <div class="container-fluid">
   <div class="row g-4">
     <!-- Bagian Scoreboard -->
@@ -99,33 +157,65 @@ if (!$found_current_user && $current_user_id) {
         <?php if (!empty($top_users) || $extra_user): ?>
           <?php $rank = 1; ?>
           <?php foreach ($top_users as $row): ?>
-            <div class="list-group-item d-flex justify-content-between align-items-center <?= $row['id'] == $current_user_id ? 'bg-warning-subtle fw-bold' : '' ?>">
-              <div class="d-flex align-items-center">
-                <?php if ($rank == 1): ?>
-                  <img src="../assets/images/dashboard/juara1.png" alt="1" width="30" height="30" class="me-2">
-                <?php elseif ($rank == 2): ?>
-                  <img src="../assets/images/dashboard/juara2.png" alt="2" width="30" height="30" class="me-2">
-                <?php elseif ($rank == 3): ?>
-                  <img src="../assets/images/dashboard/juara3.png" alt="3" width="30" height="30" class="me-2">
-                <?php else: ?>
-                  <span class="badge bg-secondary me-2"><?= $rank ?></span>
-                <?php endif; ?>
-                <span><?= htmlspecialchars($row['name']) ?></span>
+              <div class="list-group-item d-flex justify-content-between align-items-center <?= $row['id'] == $current_user_id ? 'bg-warning-subtle fw-bold' : '' ?>">
+                <div class="d-flex align-items-center">
+                  <!-- Rank agak berjauhan -->
+                  <div class="me-3">
+                    <?php if ($rank == 1): ?>
+                      <img src="../assets/images/dashboard/juara1.png" alt="1" width="30" height="30">
+                    <?php elseif ($rank == 2): ?>
+                      <img src="../assets/images/dashboard/juara2.png" alt="2" width="30" height="30">
+                    <?php elseif ($rank == 3): ?>
+                      <img src="../assets/images/dashboard/juara3.png" alt="3" width="30" height="30">
+                    <?php else: ?>
+                      <span class="badge bg-secondary"><?= $rank ?></span>
+                    <?php endif; ?>
+                  </div>
+
+                  <!-- Avatar + Emot Bubble -->
+                  <div class="position-relative me-3 align-items-center justify-content-center">
+                    <img src="../assets/images/avatar/<?= htmlspecialchars($row['avatar']) ?>.png" 
+                        alt="avatar" width="50" height="50" 
+                        class="rounded-circle border">
+                    <?php if (!empty($row['status_emot'])): ?>
+                      <span class="emot-bubble user-emot"><?= htmlspecialchars($row['status_emot']) ?></span>
+                    <?php endif; ?>
+                  </div>
+
+                  <!-- Nama -->
+                  <span><?= htmlspecialchars($row['name']) ?></span>
+                </div>
+
+                <!-- XP -->
+                <span class="fw-bold"><?= $row['exp'] ?> XP</span>
               </div>
-              <span class="fw-bold"><?= $row['exp'] ?> XP</span>
-            </div>
             <?php $rank++; ?>
           <?php endforeach; ?>
 
-          <?php if ($extra_user): ?>
-            <div class="list-group-item d-flex justify-content-between align-items-center bg-gradient bg-warning text-dark">
-              <div class="d-flex align-items-center">
-                <span class="badge bg-dark me-3"><?= $extra_user_rank ?></span>
-                <span class="fw-bold"><?= htmlspecialchars($extra_user['name']) ?></span>
+            <?php if ($extra_user): ?>
+              <div class="list-group-item d-flex justify-content-between align-items-center bg-gradient bg-warning text-dark">
+                <div class="d-flex align-items-center">
+                  <span class="badge bg-dark me-3"><?= $extra_user_rank ?></span>
+
+                  <!-- Avatar + Emot Bubble (extra user) -->
+                  <div class="position-relative me-3 align-items-center justify-content-center">
+                    <img src="../assets/images/avatar/<?= htmlspecialchars($extra_user['avatar']) ?>.png" 
+                        alt="avatar" width="50" height="50" 
+                        class="rounded-circle border">
+                    <?php if (!empty($extra_user['status_emot'])): ?>
+                      <span class="emot-bubble user-emot"><?= htmlspecialchars($extra_user['status_emot']) ?></span>
+                    <?php endif; ?>
+                  </div>
+
+                  <!-- Nama -->
+                  <span class="fw-bold"><?= htmlspecialchars($extra_user['name']) ?></span>
+                </div>
+
+                <!-- XP -->
+                <span class="fw-bold"><?= $extra_user['exp'] ?> XP</span>
               </div>
-              <span class="fw-bold"><?= $extra_user['exp'] ?> XP</span>
-            </div>
-          <?php endif; ?>
+            <?php endif; ?>
+
         <?php else: ?>
           <p class="text-center">Belum ada peserta.</p>
         <?php endif; ?>
@@ -134,43 +224,42 @@ if (!$found_current_user && $current_user_id) {
 
     <!-- Bagian Samping -->
     <div class="col-lg-4">
-      <div class="d-flex justify-content-around align-items-center mb-4">
-        <!-- EXP -->
-        <div class="text-center">
-          <img src="../assets/images/dashboard/exp.png" alt="" width="40" class="rounded-circle mb-1">
-          <p class="mb-0 fw-bold"><?= $exp ?></p>
+        <div class="titleStreaklead d-flex align-items-center justify-content-around gap-4 p-2 px-4 bg-white rounded-pill shadow-sm">
+          <!-- Exp -->
+          <div class="d-flex align-items-center gap-2">
+            <img src="../assets/images/dashboard/exp.png" width="28">
+            <span class="fw-bold"><?= $exp; ?></span>
+          </div>
+
+          <!-- Rank / Gold -->
+          <div class="d-flex align-items-center gap-2">
+            <img src="../assets/images/dashboard/gold.png" width="28">
+            <span class="fw-bold"><?= $user_rank; ?></span>
+          </div>
+
+          <!-- Streak -->
+          <div class="d-flex align-items-center gap-2">
+            <img src="../assets/images/dashboard/<?= $streak ? "redFire" : "blackFire"; ?>.png" width="28">
+            <span class="fw-bold"><?= $streak; ?></span>
+          </div>
+
+          <!-- Avatar -->
+          <div class="dropdown">
+            <a href="#" data-bs-toggle="dropdown">
+              <img src="../assets/images/avatar/<?= $avatar ?>.png" width="32" class="rounded-circle">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+              <a href="index.php?page=profil" class="dropdown-item">Profil</a>
+              <a href="logout.php" class="dropdown-item text-danger">
+                <i class="fas fa-sign-out-alt"></i> Keluar
+              </a>
+            </div>
+          </div>
         </div>
 
-        <!-- Rank -->
-        <div class="text-center">
-          <img src="../assets/images/dashboard/gold.png" alt="" width="40" class="rounded-circle mb-1">
-          <p class="mb-0 fw-bold"><?= $user_rank ?></p>
-        </div>
-
-        <!-- Streak -->
-        <div class="text-center">
-          <?php if ($streak == 0): ?>
-            <img src="../assets/images/dashboard/blackFire.png" alt="" width="40" class="rounded-circle mb-1">
-          <?php else: ?>
-            <img src="../assets/images/dashboard/redFire.png" alt="" width="40" class="rounded-circle mb-1">
-          <?php endif; ?>
-          <p class="mb-0 fw-bold"><?= $streak ?></p>
-        </div>
-
-        <!-- Profile -->
-        <div class="dropdown">
-          <a class="d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img alt="image" src="../assets/images/avatar/<?= $avatar ?>.png" width="40" class="rounded-circle">
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="index.php?page=profil">Profile</a></li>
-            <li><a class="dropdown-item text-danger" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a></li>
-          </ul>
-        </div>
-      </div>
 
       <!-- Daily Challenge -->
-      <div class="card shadow-sm">
+      <div class="card shadow-sm mt-4">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h6 class="text-uppercase text-secondary mb-0">Daily Challenge</h6>
@@ -187,6 +276,53 @@ if (!$found_current_user && $current_user_id) {
           </div>
         </div>
       </div>
+      <div class="card shadow-sm mt-3">
+        <div class="card-body">
+          <h6 class="text-uppercase text-secondary mb-2">Pasang Statusmu</h6>
+            <div class="status-avatar-wrapper my-4">
+              <img src="../assets/images/avatar/<?= $avatar ?>.png" 
+                  alt="avatar" width="80" height="80">
+              <?php if (!empty($user['status_emot'])): ?>
+                <span class="emot-bubble user-emot"><?= htmlspecialchars($user['status_emot']) ?></span>
+              <?php endif; ?>
+            </div>
+          <div class="d-flex flex-wrap gap-2">
+            <?php 
+            $emots = ["😎","🎉","💪","👀","🍿","🇺🇸","😈","💯","💩","🏆","🍟","👓"];
+            foreach ($emots as $emot): ?>
+              <button class="btn btn-light border choose-emot" data-emot="<?= $emot ?>"><?= $emot ?></button>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
+<script>
+document.querySelectorAll('.choose-emot').forEach(btn => {
+  btn.addEventListener('click', function() {
+    let emot = this.getAttribute('data-emot');
+    fetch('../process/update_status.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'status_emot=' + encodeURIComponent(emot)
+    })
+    .then(res => res.text())
+    .then(data => {
+      if (data === "OK") {
+        // update bubble di card user
+        let bubble = document.querySelector('.user-emot');
+        if (bubble) {
+          bubble.textContent = emot;
+          bubble.style.display = 'inline-block';
+        }
+      } else {
+        alert("Gagal update status!");
+      }
+    });
+  });
+});
+
+
+</script>

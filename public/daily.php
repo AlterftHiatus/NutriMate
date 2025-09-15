@@ -86,7 +86,7 @@ $resultHistory = $stmtHistory->get_result();
 
 <style>
 :root {
-  --primary: yellow;
+  --primary: #080808ff;
   --secondary: #6c757d;
   --accent: #080808ff;
   --soft-bg: #f8f9fa;
@@ -112,7 +112,7 @@ section.d-flex.gap-4 {
   box-shadow: var(--shadow);
   transition: transform .3s ease;
 }
-.card:hover { transform: translateY(-4px); }
+/* .card:hover { transform: translateY(-4px); } */
 
 /* Title */
 h2.fw-bold { color: var(--accent) !important; }
@@ -230,12 +230,12 @@ h2.fw-bold { color: var(--accent) !important; }
     </div>
 
     <div class="card p-4 mb-4">
-      <h5 class="mb-3 text-center"><i class="bi bi-graph-up"></i> EXP 7 Hari Terakhir</h5>
+      <h5 class="mb-3 text-center fw-semibold"><i class="bi bi-graph-up fw-bold me-2"></i>XP 7 Hari Terakhir</h5>
       <canvas id="expChart" height="270"></canvas>
     </div>
 
     <div class="card p-4">
-      <h5 class="mb-3 text-center"><i class="bi bi-card-checklist"></i> Riwayat Aktivitas</h5>
+      <h5 class="mb-3 text-center fw-semibold"><i class="bi bi-card-checklist fw-bold me-2"></i>Riwayat Aktivitas</h5>
       <div class="table-responsive">
         <table class="table table-striped table-hover text-center">
           <thead>
@@ -244,7 +244,7 @@ h2.fw-bold { color: var(--accent) !important; }
               <th>Aktivitas</th>
               <th>Durasi</th>
               <th>Kalori</th>
-              <th>EXP</th>
+              <th>XP</th>
             </tr>
           </thead>
             <tbody>
@@ -270,7 +270,7 @@ h2.fw-bold { color: var(--accent) !important; }
 
   <!-- Sidebar -->
   <div class="sideSection">
-    <div class="titleStreak mb-4">
+    <div class="titleStreak mb-4 justify-content-around">
       <div class="streak"><img src="../assets/images/dashboard/exp.png" width="32"><p><?= $exp; ?></p></div>
       <div class="streak"><img src="../assets/images/dashboard/gold.png" width="32"><p><?= $user_rank; ?></p></div>
       <div class="streak">
@@ -309,25 +309,36 @@ h2.fw-bold { color: var(--accent) !important; }
 
 <script>
 const ctx = document.getElementById('expChart').getContext('2d');
-const gradient = ctx.createLinearGradient(0,0,0,400);
-gradient.addColorStop(0,'#007bff');
-gradient.addColorStop(1,'rgba(0,123,255,0.2)');
 
-new Chart(ctx,{
-  type:'bar',
-  data:{
+new Chart(ctx, {
+  type: 'bar',
+  data: {
     labels: <?= json_encode($labels); ?>,
-    datasets:[{
-      label:'EXP',
+    datasets: [{
+      label: 'EXP',
       data: <?= json_encode($expValues); ?>,
-      backgroundColor: <?= json_encode(array_sum($expValues)>0 ? "gradient" : "#e9ecef"); ?>,
-      borderRadius:10
+      backgroundColor: [
+        '#007bff', // biru
+        '#28a745', // hijau
+        '#ffc107', // kuning
+        '#dc3545', // merah
+        '#6f42c1', // ungu
+        '#20c997', // toska
+        '#fd7e14'  // oranye
+      ],
+      borderRadius: 10
     }]
   },
-  options:{
-    responsive:true,
-    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.parsed.y+' EXP'}} },
-    scales:{ y:{ beginAtZero:true, ticks:{ stepSize:10 } } }
+  options: {
+    responsive: true,
+    plugins: { 
+      legend: { display: false }, 
+      tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' EXP' } }
+    },
+    scales: { 
+      y: { beginAtZero: true, ticks: { stepSize: 10 } } 
+    }
   }
 });
+
 </script>

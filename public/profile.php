@@ -108,6 +108,13 @@ $result_activities = $stmt2->get_result();
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
+    .avatar-option {
+  transition: transform 0.2s ease;
+}
+.avatar-option:hover {
+  transform: scale(1.1);
+}
+
 </style>
 <body class="bg-light">
     <div class="card shadow-sm mb-4 bg-info">
@@ -310,3 +317,62 @@ $result_activities = $stmt2->get_result();
 
 <!-- Alert feedback -->
 <div id="profileAlert" class="alert mt-3 d-none" role="alert"></div>
+<!-- Modal Pilih Avatar -->
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form id="avatarForm" action="../process/update_avatar.php" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="avatarModalLabel">Pilih Avatar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id_pengguna" value="<?= $user_id ?>">
+
+          <div class="row g-3 text-center">
+            <?php
+            // Avatar options berdasarkan gender
+            $gender = strtolower($user['jenis_kelamin']);
+            $avatars = [];
+
+            if ($gender === "laki-laki") {
+                $avatars = ["man1_", "man2_", "man3_"];
+            } elseif ($gender === "perempuan") {
+                $avatars = ["women1_", "women2_", "women3_"];
+            }
+
+            foreach ($avatars as $av): ?>
+              <div class="col-4">
+                <label>
+                  <input type="radio" name="avatar" value="<?= $av ?>" class="d-none" 
+                         <?= $avatar_user === $av ? "checked" : "" ?>>
+                  <img src="../assets/images/avatar/<?= $av ?>.png" 
+                       class="avatar-option img-thumbnail rounded-circle p-2 <?= $avatar_user === $av ? 'border border-3 border-info' : '' ?>" 
+                       style="cursor:pointer; width: 100px;">
+                </label>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Simpan Avatar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelectorAll(".avatar-option").forEach(img => {
+  img.addEventListener("click", function() {
+    document.querySelectorAll(".avatar-option").forEach(i => i.classList.remove("border", "border-3", "border-info"));
+    this.classList.add("border", "border-3", "border-info");
+    this.previousElementSibling.checked = true;
+  });
+});
+
+// Trigger modal dari tombol edit-foto
+document.getElementById("edit-foto").closest("button").addEventListener("click", function() {
+  let modal = new bootstrap.Modal(document.getElementById("avatarModal"));
+  modal.show();
+});
+</script>

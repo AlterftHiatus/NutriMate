@@ -151,36 +151,41 @@ if (isset($_GET['q'])) {
     $foods = searchFood($access_token, $_GET['q']);
 }
 ?>
+<style>
+.form-control:focus {
+  box-shadow: 0 0 0 .2rem rgba(255,193,7,.25); /* kuning sesuai btn-warning */
+  border-color: #ffc107;
+}
+
+</style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="container-fluid mb-4">
-<h2 class="mb-2 text-center fw-bold"> Nutrisi Harian</h2>
-<p class="text-center text-muted mb-3">
-    Lacak asupan makanan, kalori, protein, karbohidrat, dan lemak harianmu. 
-    Dapatkan rekomendasi nutrisi sesuai kebutuhan tubuh untuk menjaga pola hidup sehat.
-</p>
-
-<!-- Rekomendasi Asupan -->
-<div class="card border-0 shadow-lg rounded-4 mt-4 mb-4">
-
-</div>
-
+    <div class="titlenutrisi">
+        <h2 class="mb-2 text-center fw-bold">Nutrisi Harian</h2>
+        <p class="text-center text-muted" style="max-width: 600px; margin: auto;">
+            Lacak asupan makanan dan aktivitas harianmu. 
+            Dapatkan rekomendasi nutrisi sesuai kebutuhan tubuh untuk menjaga pola hidup sehat.
+        </p>
+    </div>
     <!-- FORM PENCARIAN -->
 <div class="my-4 d-flex justify-content-center">
-    <form method="GET" action="dashboard.php" 
-          class="d-flex w-100" 
-          style="max-width: 500px;">
-        <input type="hidden" name="page" value="nutrition">
+    <form method="GET" action="dashboard.php" class="w-100" style="max-width: 600px;">
+    <input type="hidden" name="page" value="nutrition">
 
+    <div class="position-relative">
         <input type="text" 
-               class="form-control form-control-sm rounded-start-3" 
-               name="q" 
-               placeholder="masukkan nama makanan (contoh: nasi goreng)" 
-               value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+            class="form-control form-control-lg ps-4 pe-5 rounded-pill shadow-sm " 
+            name="q" 
+            placeholder="Masukkan nama makanan (contoh: nasi goreng)" 
+            style="font-size: 14px;"
+            value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
 
-        <button type="submit" class="btn btn-primary btn-sm rounded-end-3">
-            <i class="bi bi-search"></i> Cari
+        <button type="submit" 
+                class="btn btn-link position-absolute end-0 top-50 translate-middle-y me-3 p-0">
+        <i class="bi bi-search fs-5 text-muted"></i>
         </button>
-    </form>
+    </div>
+    </form> 
 </div>
 
 
@@ -217,7 +222,7 @@ if (isset($_GET['q'])) {
     <!-- LOG MAKANAN -->
     <div class="card mb-4 border-0 shadow-lg rounded-4">
         <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-journal-text"></i> Log Makanan (<?= $tanggal ?>)</h5>
+            <h5 class="card-title"><i class="bi bi-journal-text"></i> Log Makanan hari ini</h5>
                 <ul class="list-group list-group-flush">
                     <?php
                     $result = $conn->query("SELECT makanan, kalori, protein, karbo, lemak 

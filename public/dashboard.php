@@ -21,40 +21,76 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
   <link rel="stylesheet" href="../assets/css/dashboard.css">
   <link rel="stylesheet" href="../assets/css/chat.css">
   <link rel="stylesheet" href="../assets/css/leaderboard.css">
-  <title>Dashboard - Nutrimate</title><style>
+  <title>Dashboard - Nutrimate</title>
+  <style>
   /* Safe box-sizing */
   *, *::before, *::after { box-sizing: border-box; }
 
   /* Default font */
   body { font-family: "Poppins", sans-serif; }
 
-  /* Sidebar behavior */
-  #sidebar {
-    z-index: 1030;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
 
-  /* Nav links */
-  #sidebar .nav-link {
-    color: #fff;
-    border-radius: 12px;
-    padding: 10px 12px;
-    transition: all 0.2s ease-in-out;
-  }
-
-  /* Hover */
-  #sidebar .nav-link:hover {
-    background-color: rgba(255,255,255,0.1);
-  }
-
-  /* Active custom */
-#sidebar .nav-link.active {
-  background-color: transparent !important;
-  outline: 2px solid #1cb0f6;   /* tidak mengubah layout */
-  outline-offset: -2px;
-  color: #1cb0f6 !important;
+#sidebar .nav {
+  padding-left: 0;
+  margin: 0;
+  gap: 0 !important; /* hilangkan gap */
 }
+
+#sidebar .nav-item {
+  margin: 0;
+}
+
+#sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 14px;
+  padding: 10px 14px; /* agak rapat tapi masih nyaman */
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+#sidebar .nav-link:hover {
+  color: #ffc107 !important;
+}
+
+/* Active ala Duolingo */
+#sidebar .nav-link.active {
+  background-color: rgba(255, 193, 7, 0.15) !important; /* warning light */
+  outline: 2px solid #ffc107;
+  outline-offset: -2px;
+  color: #ffc107 !important;
+  font-weight: 700;
+}
+
+#sidebar .nav-item {
+  margin-bottom: 0 !important;
+}
+
+/* Bottom nav modern */
+#bottomNav {
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#bottomNav .nav-link {
+  font-size: 12px;
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+#bottomNav .nav-link img {
+  display: block;
+  margin: 0 auto 2px;
+}
+
+#bottomNav .nav-link.text-primary,
+#bottomNav .nav-link.fw-bold {
+  color: #ffc107 !important; /* warning */
+}
+
+
 
 
   /* Main content responsive */
@@ -85,64 +121,81 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 </head>
 <body class="bg-light">
 
-<div class="container-fluid">
+<div class="container-fluid ">
   <div class="row flex-nowrap">
     <!-- SIDEBAR -->
     <nav id="sidebar" 
-         class="d-none d-md-block bg-dark text-white shadow-lg position-fixed top-0 start-0 h-100 p-0">
+         class="d-none d-md-block bg-dark text-white shadow-lg position-fixed top-0 start-0 h-100 px-2">
       
       <!-- Logo -->
       <div class="d-flex align-items-center justify-content-center mt-4 mb-4 pb-3 border-bottom">
         <img src="../assets/images/avatar/nut.png" alt="logo" width="50" 
-             class="me-2 rounded-circle border border-2 border-light">
+             class="me-2 rounded-circle border border-3 border-light">
         <h4 class="m-0 fw-bold">
           <span class="text-warning">NUT</span>RIMATE
         </h4>
       </div>
 
       <!-- Menu -->
-      <ul class="nav nav-pills flex-column mb-auto px-3">
-        <li class="nav-item mb-2 ms-1">
-          <a href="?page=daily" 
-             class="nav-link d-flex align-items-center gap-2 fw-semibold
-                    <?= $page === 'daily' ? 'active' : '' ?>">
-            <img src="../assets/images/dashboard/daily.png" width="40" alt="Aktivitas">
-            <span>Aktivitas</span>
-          </a>
-        </li>
-        <li class="nav-item mb-2 ms-1">
-          <a href="?page=chat" 
-             class="nav-link d-flex align-items-center gap-2 fw-semibold
-                    <?= $page === 'chat' ? 'active' : '' ?>">
-            <img src="../assets/images/dashboard/chatBot.png" width="40" alt="Chat">
-            <span>ChatBot</span>
-          </a>
-        </li>
-        <li class="nav-item mb-2 ms-1">
-          <a href="?page=nutrition" 
-             class="nav-link d-flex align-items-center gap-2 fw-semibold
-                    <?= $page === 'nutrition' ? 'active' : '' ?>">
-            <img src="../assets/images/dashboard/nutrition.png" width="38" alt="Nutrisi">
-            <span>Nutrisi</span>
-          </a>
-        </li>
-        <li class="nav-item mb-2 ms-1">
-          <a href="?page=rank" 
-             class="nav-link d-flex align-items-center gap-2 fw-semibold
-                    <?= $page === 'rank' ? 'active' : '' ?>">
-            <img src="../assets/images/dashboard/rank.png" width="40" alt="Skor">
-            <span>Skor</span>
-          </a>
-        </li>
-        <li class="nav-item mb-2 ms-1">
-          <a href="?page=profil" 
-             class="nav-link d-flex align-items-center gap-2 fw-semibold
-                    <?= $page === 'profil' ? 'active' : '' ?>">
-            <img src="../assets/images/dashboard/profile.png" width="40" alt="Profil">
-            <span>Profil</span>
-          </a>
-        </li>
-      </ul>
+      <ul class="nav nav-pills flex-column mb-auto">
+  <li class="nav-item">
+    <a href="?page=daily" 
+       class="nav-link 
+              <?= $page === 'daily' ? 'active' : '' ?> d-flex align-items-center gap-3 fw-semibold py-2 px-2">
+      <img src="../assets/images/dashboard/daily.png" width="32" alt="Aktivitas">
+      <span>Aktivitas</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="?page=chat" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
+              <?= $page === 'chat' ? 'active' : '' ?>">
+      <img src="../assets/images/dashboard/chatBot.png" width="32" alt="Chat">
+      Chat Nut
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="?page=nutrition" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
+              <?= $page === 'nutrition' ? 'active' : '' ?>">
+      <img src="../assets/images/dashboard/nutrition.png" width="32" alt="Nutrisi">
+      Nutrisi
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="?page=misi" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
+              <?= $page === 'misi' ? 'active' : '' ?>">
+      <img src="../assets/images/dashboard/misi.png" width="32" alt="misi">
+      Misi
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="?page=rank" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
+              <?= $page === 'rank' ? 'active' : '' ?>">
+      <img src="../assets/images/dashboard/rank.png" width="32" alt="Skor">
+      Papan Skor
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="?page=profil" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
+              <?= $page === 'profil' ? 'active' : '' ?>">
+      <img src="../assets/images/dashboard/profile.png" width="32" alt="Profil">
+      Profil
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="?page=lainnya" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
+              <?= $page === 'lainnya' ? 'active' : '' ?>">
+      <img src="../assets/images/dashboard/lainnya.png" width="32" alt="lainnya">
+      Lainnya
+    </a>
+  </li>
+</ul>
+
     </nav>
 
 
@@ -155,8 +208,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
           case 'daily': include 'daily.php'; break;
           case 'chat': include 'chatbot.php'; break;
           case 'nutrition': include 'nutrition.php'; break;
+          case 'misi': include 'misi.php'; break;
           case 'rank': include 'leaderboard.php'; break;
           case 'profil': include 'profile.php'; break;
+          case 'lainnya': include 'lainnya.php'; break;
           default: echo '<p>Halaman tidak ditemukan</p>'; break;
         }
       ?>
