@@ -164,14 +164,22 @@ if (!$found_current_user && $current_user_id) {
                   </div>
 
                   <!-- Avatar + Emot Bubble -->
+                  <!-- dalam loop top users -->
                   <div class="position-relative me-3 align-items-center justify-content-center">
                     <img src="../assets/images/avatar/<?= htmlspecialchars($row['avatar']) ?>.png" 
                         alt="avatar" width="50" height="50" 
                         class="rounded-circle border">
-                    <?php if (!empty($row['status_emot'])): ?>
-                      <span class="emot-bubble user-emot"><?= htmlspecialchars($row['status_emot']) ?></span>
-                    <?php endif; ?>
+
+                    <!-- Bubble selalu ada, punya id unik per user -->
+                    <span
+                      class="emot-bubble user-emot"
+                      id="user-emot-<?= $row['id'] ?>"
+                      <?= empty($row['status_emot']) ? 'style="display:none"' : '' ?>
+                    >
+                      <?= htmlspecialchars($row['status_emot'] ?? '') ?>
+                    </span>
                   </div>
+
 
                   <!-- Nama -->
                   <span><?= htmlspecialchars($row['name']) ?></span>
@@ -189,14 +197,20 @@ if (!$found_current_user && $current_user_id) {
                   <span class="badge bg-dark me-3"><?= $extra_user_rank ?></span>
 
                   <!-- Avatar + Emot Bubble (extra user) -->
-                  <div class="position-relative me-3 align-items-center justify-content-center">
-                    <img src="../assets/images/avatar/<?= htmlspecialchars($extra_user['avatar']) ?>.png" 
-                        alt="avatar" width="50" height="50" 
-                        class="rounded-circle border">
-                    <?php if (!empty($extra_user['status_emot'])): ?>
-                      <span class="emot-bubble user-emot"><?= htmlspecialchars($extra_user['status_emot']) ?></span>
-                    <?php endif; ?>
-                  </div>
+<!-- extra_user -->
+                <div class="position-relative me-3 align-items-center justify-content-center">
+                  <img src="../assets/images/avatar/<?= htmlspecialchars($extra_user['avatar']) ?>.png" 
+                      alt="avatar" width="50" height="50" 
+                      class="rounded-circle border">
+
+                  <span
+                    class="emot-bubble user-emot"
+                    id="user-emot-<?= $extra_user['id'] ?>"
+                    <?= empty($extra_user['status_emot']) ? 'style="display:none"' : '' ?>
+                  >
+                    <?= htmlspecialchars($extra_user['status_emot'] ?? '') ?>
+                  </span>
+                </div>
 
                   <!-- Nama -->
                   <span class="fw-bold"><?= htmlspecialchars($extra_user['name']) ?></span>
@@ -270,10 +284,21 @@ if (!$found_current_user && $current_user_id) {
       <div class="card shadow-sm mt-3">
         <div class="card-body">
           <h6 class="text-uppercase text-secondary mb-2">Pasang Statusmu</h6>
-            <div class="status-avatar-wrapper my-4">
+          <div class="status-avatar-wrapper my-4">
+            <div class="position-relative" style="width:80px; height:80px;">
               <img src="../assets/images/avatar/<?= $avatar ?>.png" 
                   alt="avatar" width="80" height="80">
+
+              <!-- bubble milik user saat ini -->
+              <span
+                class="emot-bubble user-emot"
+                id="my-emot"
+                <?= empty($user['status_emot']) ? 'style="display:none"' : '' ?>
+              >
+                <?= htmlspecialchars($user['status_emot'] ?? '') ?>
+              </span>
             </div>
+          </div>
           <div class="d-flex flex-wrap gap-2">
             <?php 
             $emots = ["😎","🎉","💪","👀","🍿","🇺🇸","😈","💯","💩","🏆","🍟","👓"];
@@ -288,6 +313,8 @@ if (!$found_current_user && $current_user_id) {
   </div>
 </div>
 <script>
+const currentUserId = <?= json_encode($current_user_id) ?>;
+
 document.querySelectorAll('.choose-emot').forEach(btn => {
   btn.addEventListener('click', function() {
     let emot = this.getAttribute('data-emot');
@@ -298,12 +325,30 @@ document.querySelectorAll('.choose-emot').forEach(btn => {
     })
     .then(res => res.text())
     .then(data => {
-      if (data === "OK") {
-        // update bubble di card user
-        let bubble = document.querySelector('.user-emot');
-        if (bubble) {
-          bubble.textContent = emot;
-          bubble.style.display = 'inline-block';
+      // server masih mengembalikan "OK" (sesuaikan bila kamu ubah ke JSON)
+      if (data.trim() === "OK") {
+        // update bubble pada scoreboard (jika ada)
+        let listBubble = document.querySelector(`#user-emot-${currentUserId}`);
+        if (listBubble) {
+          listBubble.textContent = emot;
+          listBubble.style.display = 'inline-block';
+        } else {
+          // jika tidak ada (mis. belum tampil di scoreboard), kita bisa buatnya secara dinamis:
+          const playerDiv = document.querySelector(`.list-group-item[data-user-id="${currentUserId}"]`);
+          if (playerDiv) {
+            const newSpan = document.createElement('span');
+            newSpan.id = `user-emot-${currentUserId}`;
+            newSpan.className = 'emot-bubble user-emot';
+            newSpan.textContent = emot;
+            playerDiv.querySelector('.position-relative')?.appendChild(newSpan);
+          }
+        }
+
+        // update bubble di sidebar (my-emot)
+        let myBubble = document.getElementById('my-emot');
+        if (myBubble) {
+          myBubble.textContent = emot;
+          myBubble.style.display = 'inline-block';
         }
       } else {
         alert("Gagal update status!");
@@ -311,6 +356,4 @@ document.querySelectorAll('.choose-emot').forEach(btn => {
     });
   });
 });
-
-
 </script>

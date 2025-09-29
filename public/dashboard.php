@@ -21,6 +21,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
   <link rel="stylesheet" href="../assets/css/dashboard.css">
   <link rel="stylesheet" href="../assets/css/chat.css">
   <link rel="stylesheet" href="../assets/css/leaderboard.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
   <title>Dashboard - Nutrimate</title>
   <style>
   /* Safe box-sizing */
@@ -129,8 +133,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
       
       <!-- Logo -->
       <div class="d-flex align-items-center justify-content-center mt-4 mb-4 pb-3 border-bottom">
-        <img src="../assets/images/avatar/nut.png" alt="logo" width="50" 
-             class="me-2 rounded-circle border border-3 border-light">
         <h4 class="m-0 fw-bold">
           <span class="text-warning">NUT</span>RIMATE
         </h4>
@@ -190,19 +192,18 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
     <a href="?page=lainnya" 
        class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
               <?= $page === 'lainnya' ? 'active' : '' ?>">
-      <img src="../assets/images/dashboard/lainnya.png" width="32" alt="lainnya">
+      <img src="../assets/images/dashboard/more.png" width="32" alt="lainnya">
       Lainnya
     </a>
   </li>
 </ul>
-
-    </nav>
+</nav>
 
 
 
 
     <!-- KONTEN -->
-    <main id="mainContent" class="px-3 py-4">
+    <main id="mainContent" class="px-3 py-4 ">
       <?php
         switch ($page) {
           case 'daily': include 'daily.php'; break;
