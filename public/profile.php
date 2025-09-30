@@ -54,7 +54,7 @@ if (!empty($height) && !empty($weight) && $height > 0) {
 
 // 🔹 Ambil aktivitas terakhir (5 aktivitas terbaru)
 $sql_activities = "
-    SELECT ua.activity_date, ua.duration_minutes, ua.calories_burned, ua.exp_earned, a.name as activity_name
+    SELECT ua.activity_date, ua.duration_seconds, ua.calories_burned, ua.exp_earned, a.name as activity_name
     FROM user_activities ua
     JOIN activities a ON ua.activity_id = a.id
     WHERE ua.user_id = ?
@@ -274,7 +274,7 @@ $result_activities = $stmt2->get_result();
                                 <tr>
                                     <td><?= date("d M Y", strtotime($row['activity_date'])) ?></td>
                                     <td><?= htmlspecialchars($row['activity_name']) ?></td>
-                                    <td><?= $row['duration_minutes'] ?></td>
+                                    <td><?= $row['duration_seconds'] ?></td>
                                     <td><?= $row['calories_burned'] ?></td>
                                     <td><?= $row['exp_earned'] ?></td>
                                 </tr>

@@ -1,35 +1,7 @@
 {
-  "candidates": [
-    {
-      "content": {
-        "parts": [
-          {
-            "text": "Untuk menghitung BMI (Indeks Massa Tubuh) Anda, Anda perlu mengetahui tinggi badan dan berat badan Anda.  Rumusnya adalah:\n\n**BMI = Berat badan (kg) / (Tinggi badan (m))²**\n\n**Langkah-langkah:**\n\n1. **Berat Badan:** Timbang berat badan Anda dalam kilogram (kg).\n2. **Tinggi Badan:** Ukur tinggi badan Anda dalam meter (m).  Jika Anda mengukurnya dalam sentimeter (cm), bagi angka tersebut dengan 100 untuk mengubahnya menjadi meter.\n3. **Hitung:** Masukkan nilai berat badan dan tinggi badan Anda ke dalam rumus di atas.  Kuadratkan tinggi badan Anda (kalikan tinggi badan dengan dirinya sendiri) sebelum membagi berat badan dengannya.\n\n**Contoh:**\n\nMisalnya, berat badan Anda 70 kg dan tinggi badan Anda 175 cm (1.75 m).  Maka perhitungannya adalah:\n\nBMI = 70 kg / (1.75 m)² = 70 kg / 3.0625 m² ≈ 22.86\n\nJadi, BMI Anda dalam contoh ini adalah sekitar 22.86.\n\nSetelah Anda menghitung BMI, Anda dapat mencari tahu kategori BMI Anda dengan menggunakan tabel atau grafik BMI yang tersedia secara online.  Ingatlah bahwa BMI hanyalah satu indikator kesehatan, dan sebaiknya berkonsultasi dengan dokter atau ahli gizi untuk interpretasi yang lebih akurat dan saran kesehatan yang sesuai.\n"
-          }
-        ],
-        "role": "model"
-      },
-      "finishReason": "STOP",
-      "avgLogprobs": -0.12672633045124557
-    }
-  ],
-  "usageMetadata": {
-    "promptTokenCount": 7,
-    "candidatesTokenCount": 318,
-    "totalTokenCount": 325,
-    "promptTokensDetails": [
-      {
-        "modality": "TEXT",
-        "tokenCount": 7
-      }
-    ],
-    "candidatesTokensDetails": [
-      {
-        "modality": "TEXT",
-        "tokenCount": 318
-      }
-    ]
-  },
-  "modelVersion": "gemini-1.5-flash",
-  "responseId": "h5_KaKazGvG4qtsP9vrD2AM"
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
 }

@@ -70,7 +70,7 @@ for ($i = 6; $i >= 0; $i--) {
 // Ambil riwayat aktivitas 7 hari terakhir
 // ===================================
 $queryHistory = "
-    SELECT ua.activity_date, a.name AS activity_name, ua.duration_minutes, ua.calories_burned, ua.exp_earned
+    SELECT ua.activity_date, a.name AS activity_name, ua.duration_seconds, ua.calories_burned, ua.exp_earned
     FROM user_activities ua
     JOIN activities a ON ua.activity_id = a.id
     WHERE ua.user_id = ?
@@ -254,7 +254,7 @@ h2.fw-bold { color: var(--accent) !important; }
                   <tr>
                     <td data-label="Tanggal"><?= date('d M Y', strtotime($row['activity_date'])); ?></td>
                     <td data-label="Aktivitas"><?= htmlspecialchars($row['activity_name']); ?></td>
-                    <td data-label="Durasi"><?= (int)$row['duration_minutes']; ?> mnt</td>
+                    <td data-label="Durasi"><?= (int)$row['duration_seconds']; ?> mnt</td>
                     <td data-label="Kalori"><?= (int)$row['calories_burned']; ?> kcal</td>
                     <td data-label="EXP"><?= (int)$row['exp_earned']; ?></td>
                   </tr>

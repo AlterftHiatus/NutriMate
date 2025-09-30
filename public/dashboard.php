@@ -189,36 +189,14 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
     </a>
   </li>
   <li class="nav-item">
-    <a href="?page=lainnya" 
-       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2
-              <?= $page === 'lainnya' ? 'active' : '' ?>">
-      <img src="../assets/images/dashboard/more.png" width="32" alt="lainnya">
-      Lainnya
+    <a href="logout.php" 
+       class="nav-link d-flex align-items-center gap-3 fw-semibold py-2 px-2">
+      <img src="../assets/images/dashboard/logout.png" width="32" alt="lainnya">
+      Logout
     </a>
   </li>
 </ul>
 </nav>
-
-
-
-
-    <!-- KONTEN -->
-    <main id="mainContent" class="px-3 py-4 ">
-      <?php
-        switch ($page) {
-          case 'daily': include 'daily.php'; break;
-          case 'chat': include 'chatbot.php'; break;
-          case 'nutrition': include 'nutrition.php'; break;
-          case 'misi': include 'misi.php'; break;
-          case 'rank': include 'leaderboard.php'; break;
-          case 'profil': include 'profile.php'; break;
-          case 'lainnya': include 'lainnya.php'; break;
-          default: echo '<p>Halaman tidak ditemukan</p>'; break;
-        }
-      ?>
-    </main>
-  </div>
-</div>
 
 <!-- NAVBAR BAWAH (Mobile only) -->
 <nav id="bottomNav" class="d-md-none bg-white border-top fixed-bottom">
@@ -239,12 +217,35 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
       <img src="../assets/images/dashboard/rank.png" width="24" alt="">
       <div style="font-size: 12px;">Skor</div>
     </a>
+    <a href="?page=misi" class="nav-link text-center flex-fill <?= $page === 'misi' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+      <img src="../assets/images/dashboard/misi.png" width="24" alt="">
+      <div style="font-size: 12px;">Misi</div>
+    </a>
     <a href="?page=profil" class="text-center flex-fill <?= $page === 'profil' ? 'text-primary fw-bold' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/profile.png" width="24" alt="">
       <div style="font-size: 12px;">Profil</div>
     </a>
   </div>
 </nav>
+    <!-- KONTEN -->
+    <main id="mainContent" class="px-3 py-4 ">
+      <?php
+        switch ($page) {
+          case 'daily': include 'daily.php'; break;
+          case 'chat': include 'chatbot.php'; break;
+          case 'nutrition': include 'nutrition.php'; break;
+          case 'misi': include 'misi.php'; break;
+          case 'rank': include 'leaderboard.php'; break;
+          case 'profil': include 'profile.php'; break;
+          case 'lainnya': include 'lainnya.php'; break;
+          default: echo '<p>Halaman tidak ditemukan</p>'; break;
+        }
+      ?>
+    </main>
+  </div>
+</div>
+
+
 
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -3,12 +3,12 @@
 
 // ====== DATABASE CONFIG ======
 $host = "localhost";
-$dbname = "health_tracker";
-$username = "root"; // sesuaikan dengan user DB kamu
-$password = "";     // sesuaikan dengan password DB kamu
+$user = "root";
+$pass = "";
+$db   = "health_tracker";
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
