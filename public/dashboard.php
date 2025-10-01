@@ -201,29 +201,23 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'daily';
 <!-- NAVBAR BAWAH (Mobile only) -->
 <nav id="bottomNav" class="d-md-none bg-white border-top fixed-bottom">
   <div class="d-flex justify-content-around align-items-center py-2">
-    <a href="?page=daily" class="nav-link text-center flex-fill <?= $page === 'daily' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+    <a href="?page=daily" class="nav-link text-center flex-fill <?= $page === 'daily' ? 'bg-warning-subtle fw-bold rounded border border-warning' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/daily.png" width="24" alt="">
-      <div style="font-size: 12px;">Aktivitas</div>
     </a>
-    <a href="?page=chat" class="nav-link text-center flex-fill <?= $page === 'chat' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+    <a href="?page=chat" class="nav-link text-center flex-fill <?= $page === 'chat' ? 'bg-warning-subtle fw-bold rounded border border-warning' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/chatBot.png" width="24" alt="">
-      <div style="font-size: 12px;">Tanya Nut</div>
     </a>
-    <a href="?page=nutrition" class="nav-link text-center flex-fill <?= $page === 'nutrition' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+    <a href="?page=nutrition" class="nav-link text-center flex-fill <?= $page === 'nutrition' ? 'bg-warning-subtle fw-bold rounded border border-warning' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/nutrition.png" width="24" alt="">
-      <div style="font-size: 12px;">Nutrisi</div>
     </a>
-    <a href="?page=rank" class="nav-link text-center flex-fill <?= $page === 'rank' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+    <a href="?page=rank" class="nav-link text-center flex-fill <?= $page === 'rank' ? 'bg-warning-subtle fw-bold rounded border border-warning' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/rank.png" width="24" alt="">
-      <div style="font-size: 12px;">Skor</div>
     </a>
-    <a href="?page=misi" class="nav-link text-center flex-fill <?= $page === 'misi' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+    <a href="?page=misi" class="nav-link text-center flex-fill <?= $page === 'misi' ? 'bg-warning-subtle fw-bold rounded border border-warning' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/misi.png" width="24" alt="">
-      <div style="font-size: 12px;">Misi</div>
     </a>
-    <a href="?page=profil" class="text-center flex-fill <?= $page === 'profil' ? 'text-primary fw-bold' : 'text-secondary' ?>">
+    <a href="?page=profil" class="text-center flex-fill <?= $page === 'profil' ? 'bg-warning-subtle fw-bold rounded border border-warning' : 'text-secondary' ?>">
       <img src="../assets/images/dashboard/profile.png" width="24" alt="">
-      <div style="font-size: 12px;">Profil</div>
     </a>
   </div>
 </nav>
